@@ -21,6 +21,13 @@ President Fry sent out another email to the student body on Oct. 14 saying, “T
 </script>
 
 <style>
+    article {
+        padding: 5rem;
+        max-width: 816px;
+        box-sizing: border-box;
+        background-color: white;
+        border: solid 1px var(--neutral-primary-3);
+    }
 </style>
 
 <Header />

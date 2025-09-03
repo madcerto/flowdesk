@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from './Header.svelte';
-	import '../app.css';
+	import '$lib/styles/playground.css';
 
 	let { children } = $props();
 </script>

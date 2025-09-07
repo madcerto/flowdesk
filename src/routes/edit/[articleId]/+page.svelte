@@ -21,7 +21,11 @@ President Fry sent out another email to the student body on Oct. 14 saying, “T
 </script>
 
 <style>
+    main {
+        margin-top: 8.75rem;
+    }
     article {
+        margin: auto;
         padding: 5rem;
         max-width: 816px;
         box-sizing: border-box;

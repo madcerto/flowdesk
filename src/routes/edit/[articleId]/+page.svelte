@@ -36,14 +36,6 @@ President Fry sent out another email to the student body on Oct. 14 saying, “T
 
 <Header />
 <main>
-    <div>
-        <label for="slugline">SLUGLINE</label>
-        <input name="slugline"/>
-        <label for="categories">CATEGORIES</label>
-        <input name="categories"/>
-        <label for="byline">BYLINE</label>
-        <input name="byline"/>
-    </div>
     <article class="-sm:p-12">
 An act of arson prompted the emergency evacuation of hundreds of students living in Race Hall, one of Drexel University's predominantly freshman residence halls on Oct. 10. A widely circulated post on Instagram stated that the attack was due to Jewish decorations on one of the doors and the dorm was targeted because of the Jewish identity of one of the residents, raising concerns about antisemitic bias and hate crimes on campus. <br/> <br />
 

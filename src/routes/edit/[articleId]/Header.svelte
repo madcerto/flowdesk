@@ -15,14 +15,17 @@ let title = $state("Arson and antisemitic graffiti heighten fears of hate crime 
 </script>
 <style>
     header {
-        position: sticky;
+        position: fixed;
         top: 0;
+        width: 100%;
+        padding: 1rem;
+        background: var(--neutral-primary-1);
     }
     #primary-header {
         display: flex;
         gap: 0.5rem;
         align-items: center;
-        margin: 1rem;
+        margin-bottom: 1rem;
         * {
             background: inherit;
             font-family: serif;
@@ -30,6 +33,10 @@ let title = $state("Arson and antisemitic graffiti heighten fears of hate crime 
         button {
             font-size: 1rem;
             color: var(--primary-800);
+        }
+        button:hover {
+            color: var(--secondary-4);
+            cursor: pointer;
         }
     }
     #desk-stage {
@@ -44,12 +51,14 @@ let title = $state("Arson and antisemitic graffiti heighten fears of hate crime 
         font-size: 1.5rem;
         line-height: 2rem;
         flex: 1 1 0%;
+        border-bottom: 2px solid transparent;
     }
     #headline:hover {
         border-bottom: 2px solid var(--neutral-primary-2);
     }
     #headline:focus-visible {
         border-bottom: 2px solid var(--primary-800);
+        outline: none;
     }
 </style>
 

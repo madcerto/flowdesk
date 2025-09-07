@@ -12,6 +12,7 @@
     --primary-800: #055C9Dff;
     --secondary-2: #73BBEE;
     --secondary-3: #FEF5AC;
+    --secondary-4: #0D203B;
     --neutral-primary-1: #F8FBF8;
     --neutral-primary-2: #E3EBF2;
     --neutral-primary-3: #B0BDC1;
@@ -22,4 +23,8 @@
 body {
     background-color: var(--neutral-primary-1);
     margin: 0;
+}
+
+.hidden {
+    display: none !important;
 }

@@ -24,12 +24,9 @@
             border-radius: 9999px;
             cursor: pointer;
         }
-    }
-    #close-meta-fields:hover {
-        background: var(--primary-100);
-    }
-    #open-meta-fields:hover {
-        background: var(--neutral-primary-2);
+        img:hover {
+            background: var(--neutral-primary-2);
+        }
     }
     #meta-fields {
         padding-top: 2rem;
@@ -41,8 +38,8 @@
 
 <div id="meta-fields-container">
     <div style="border-right: 1px solid var(--primary-200); display: flex; flex-direction: column; padding: 1rem 1.5rem;">
-        <img id="close-meta-fields" src={CloseFieldsIcon} alt="Hide meta fields" class={open ? "" : "hidden"} aria-hidden="true" onclick={toggle}/>
-        <img id="open-meta-fields" src={OpenFieldsIcon} alt="Show meta fields" title="Show meta fields" class={open ? "hidden" : ""} aria-hidden="true" onclick={toggle}/>
+        <img src={CloseFieldsIcon} alt="Hide meta fields" class={open ? "" : "hidden"} aria-hidden="true" onclick={toggle}/>
+        <img src={OpenFieldsIcon} alt="Show meta fields" title="Show meta fields" class={open ? "hidden" : ""} aria-hidden="true" onclick={toggle}/>
         <div id="meta-fields" class={open ? "" : "hidden"}>
             <label for="slugline">SLUGLINE</label>
             <input name="slugline"/>

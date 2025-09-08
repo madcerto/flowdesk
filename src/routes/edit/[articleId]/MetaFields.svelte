@@ -13,9 +13,9 @@
         position: fixed;
         left: 0;
         display: flex;
-        margin-top: 1rem;
-        width: 100%;
+        padding-top: 1rem;
         height: 100%;
+        background: var(--neutral-primary-1);
         img {
             height: 1.5rem;
             width: 1.5rem;
@@ -49,5 +49,4 @@
             <input name="byline"/>
         </div>
     </div>
-    <div style="border-top: 1px solid var(--primary-200); width: 100%;"></div>
 </div>

@@ -15,6 +15,7 @@ let title = $state("Arson and antisemitic graffiti heighten fears of hate crime 
         width: 100%;
         padding: 1rem;
         background: var(--neutral-primary-1);
+        border-bottom: 1px solid var(--primary-200);
     }
     #primary-header {
         display: flex;

@@ -62,6 +62,7 @@ function runCommand(command: any) {
     <button title="Bold" onclick={runCommand(toggleMark(schema.marks.strong))}><b>B</b></button>
     <button title="Italic" onclick={runCommand(toggleMark(schema.marks.em))}><i>I</i></button>
     <button title="Underline" onclick={runCommand(toggleMark(schema.marks.strong))}><u>U</u></button>
+    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.strong))}><s>T</s></button>
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>
     <img src={CommentIcon} alt="Insert comment"/>
@@ -70,5 +71,4 @@ function runCommand(command: any) {
     <div class="divider"></div>
     <img src={UnorderedListIcon} alt="Insert unordered list"/>
     <img src={OrderedListIcon} alt="Insert ordered list"/>
-    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.strong))}><s>T</s></button>
 </div>

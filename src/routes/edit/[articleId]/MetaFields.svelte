@@ -38,7 +38,7 @@
 
 <div id="meta-fields-container">
     <div style="border-right: 1px solid var(--primary-200); display: flex; flex-direction: column; padding: 1rem 1.5rem;">
-        <img src={CloseFieldsIcon} alt="Hide meta fields" class={open ? "" : "hidden"} aria-hidden="true" onclick={toggle}/>
+        <img src={CloseFieldsIcon} alt="Hide meta fields" title="Hide meta fields" class={open ? "" : "hidden"} aria-hidden="true" onclick={toggle}/>
         <img src={OpenFieldsIcon} alt="Show meta fields" title="Show meta fields" class={open ? "hidden" : ""} aria-hidden="true" onclick={toggle}/>
         <div id="meta-fields" class={open ? "" : "hidden"}>
             <label for="slugline">SLUGLINE</label>

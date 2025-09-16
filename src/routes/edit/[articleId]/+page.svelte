@@ -1,31 +1,19 @@
 <script lang="ts">
 import { page } from "$app/state";
 import "$lib/styles/app.css";
+import { EditorState } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
 import Header from "./Header.svelte";
+import Editor from "./Editor.svelte";
 
 const { data } = $props();
+
+let editorState: EditorState | undefined = $state();
+let editorView: EditorView | undefined = $state();
 </script>
 
-<style>
-    main {
-        margin-top: 8.75rem;
-    }
-    article {
-        margin: auto;
-        padding: 5rem;
-        max-width: 816px;
-        box-sizing: border-box;
-        background-color: white;
-        border: solid 1px var(--neutral-primary-3);
-    }
-</style>
-
 <Header />
-<main>
-    <article class="-sm:p-12">
-{@html data.body_html}
-    </article>
-</main>
+<Editor bind:editorView bind:editorState content={data.body_html} />
 
 <footer>
     <p>Editing article: {page.params.articleId}</p>

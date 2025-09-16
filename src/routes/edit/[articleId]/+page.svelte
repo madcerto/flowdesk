@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { page } from "$app/state";
-    import "$lib/styles/app.css";
-    import Header from "./Header.svelte";
+import { page } from "$app/state";
+import "$lib/styles/app.css";
+import Header from "./Header.svelte";
 
-    const { data } = $props();
+const { data } = $props();
 </script>
 
 <style>

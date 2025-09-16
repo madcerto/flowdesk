@@ -2,6 +2,8 @@
 import Toolbar from "./Toolbar.svelte";
 import MetaFields from "./MetaFields.svelte";
 
+const props = $props();
+
 let deskName = "Opinion";
 let stageName = "Authoring";
 
@@ -67,6 +69,6 @@ let title = $state("Arson and antisemitic graffiti heighten fears of hate crime 
         <button>SAVE</button>
         <button>SEND</button>
     </div>
-    <Toolbar />
+    <Toolbar {...props} />
     <MetaFields />
 </header>

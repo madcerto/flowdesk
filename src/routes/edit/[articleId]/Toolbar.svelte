@@ -7,6 +7,18 @@ import SuggestionIcon from "$lib/images/pencil-square.svg";
 import ImageIcon from "$lib/images/card-image.svg";
 import UnorderedListIcon from "$lib/images/list-ul.svg";
 import OrderedListIcon from "$lib/images/list-ol.svg";
+
+import { toggleMark, setBlockType } from "prosemirror-commands";
+import { schema } from "prosemirror-schema-basic";
+
+const { editorState, dispatch, focusEditor } = $props();
+function runCommand(command: any) {
+    return (e: Event) => {
+        e.preventDefault();
+        focusEditor();
+        command(editorState, dispatch);
+    }
+}
 </script>
 
 <style>
@@ -47,16 +59,16 @@ import OrderedListIcon from "$lib/images/list-ol.svg";
     <img src={RedoArrowIcon} alt="Redo"/>
     <button id="hundred">100%</button>
     <div class="divider"></div>
-    <button><b>B</b></button>
-    <button><i>I</i></button>
-    <button><u>U</u></button>
+    <button title="Bold" onclick={runCommand(toggleMark(schema.marks.strong))}><b>B</b></button>
+    <button title="Italic" onclick={runCommand(toggleMark(schema.marks.em))}><i>I</i></button>
+    <button title="Underline" onclick={runCommand(toggleMark(schema.marks.strong))}><u>U</u></button>
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>
     <img src={CommentIcon} alt="Insert comment"/>
     <img src={SuggestionIcon} alt="Enter suggestion mode"/>
-    <img src={ImageIcon} alt="Insert image" role="button"/>
+    <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
     <img src={UnorderedListIcon} alt="Insert unordered list"/>
     <img src={OrderedListIcon} alt="Insert ordered list"/>
-    <button><s>T</s></button>
+    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.strong))}><s>T</s></button>
 </div>

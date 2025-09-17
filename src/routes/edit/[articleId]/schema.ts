@@ -143,6 +143,14 @@ export const schema: Schema = new Schema({
             ],
             toDOM() { return ["sup"] }
         },
+        subscript: {
+            parseDOM: [
+                {tag: "sub"},
+                {style: "vertical-align=sub"},
+                {style: "vertical-align=baseline", clearMark: m => m.type.name == "subscript"}
+            ],
+            toDOM() { return ["sub"] }
+        },
         /// Code font mark. Represented as a `<code>` element.
         code: {
             code: true,

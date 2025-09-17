@@ -2,7 +2,7 @@
 import { onMount } from "svelte";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { schema } from "prosemirror-schema-basic";
+import { schema } from "./schema";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { DOMParser } from "prosemirror-model";

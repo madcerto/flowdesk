@@ -9,7 +9,7 @@ import UnorderedListIcon from "$lib/images/list-ul.svg";
 import OrderedListIcon from "$lib/images/list-ol.svg";
 
 import { toggleMark, setBlockType } from "prosemirror-commands";
-import { schema } from "prosemirror-schema-basic";
+import { schema } from "./schema";
 
 const { editorState, dispatch, focusEditor } = $props();
 function runCommand(command: any) {
@@ -80,10 +80,10 @@ function setTextStyle(e: Event) {
         <option value="h6">Heading 6</option>
     </select>
     <div class="divider"></div>
-    <button title="Bold" onclick={runCommand(toggleMark(schema.marks.strong))}><b>B</b></button>
-    <button title="Italic" onclick={runCommand(toggleMark(schema.marks.em))}><i>I</i></button>
-    <button title="Underline" onclick={runCommand(toggleMark(schema.marks.strong))}><u>U</u></button>
-    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.strong))}><s>T</s></button>
+    <button title="Bold" onclick={runCommand(toggleMark(schema.marks.bold))}><b>B</b></button>
+    <button title="Italic" onclick={runCommand(toggleMark(schema.marks.italic))}><i>I</i></button>
+    <button title="Underline" onclick={runCommand(toggleMark(schema.marks.bold))}><u>U</u></button>
+    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.bold))}><s>T</s></button>
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>
     <img src={CommentIcon} alt="Insert comment"/>

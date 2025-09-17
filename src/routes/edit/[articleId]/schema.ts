@@ -99,18 +99,14 @@ export const schema: Schema = new Schema({
         //     }}],
         //     toDOM(node) { let {href, title} = node.attrs; return ["a", {href, title}, 0] }
         // },
-        /// An emphasis mark. Rendered as an `<em>` element. Has parse rules
-        /// that also match `<i>` and `font-style: italic`.
         italic: {
             parseDOM: [
                 {tag: "i"}, {tag: "em"},
                 {style: "font-style=italic"},
-                {style: "font-style=normal", clearMark: m => m.type.name == "em"}
+                {style: "font-style=normal", clearMark: m => m.type.name == "italic"}
             ],
-            toDOM() { return ["i", 0] }
+            toDOM() { return ["i"] }
         },
-        /// A strong mark. Rendered as `<strong>`, parse rules also match
-        /// `<b>` and `font-weight: bold`.
         bold: {
             parseDOM: [
                 {tag: "strong"},
@@ -118,10 +114,18 @@ export const schema: Schema = new Schema({
                 // pasted content will be inexplicably wrapped in `<b>`
                 // tags with a font-weight normal.
                 {tag: "b", getAttrs: (node: HTMLElement) => node.style.fontWeight != "normal" && null},
-                {style: "font-weight=400", clearMark: m => m.type.name == "strong"},
+                {style: "font-weight=400", clearMark: m => m.type.name == "bold"},
                 {style: "font-weight", getAttrs: (value: string) => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null},
             ],
-            toDOM() { return ["b", 0] }
+            toDOM() { return ["b"] }
+        },
+        underline: {
+            parseDOM: [
+                {tag: "u"},
+                {style: "text-decoration=underline"},
+                {style: "text-decoration=none", clearMark: m => m.type.name == "underline"}
+            ],
+            toDOM() { return ["u"] }
         },
         /// Code font mark. Represented as a `<code>` element.
         code: {

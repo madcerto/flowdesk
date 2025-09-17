@@ -19,6 +19,13 @@ function runCommand(command: any) {
         command(editorState, dispatch);
     }
 }
+
+let textStyle: string = $state("p");
+
+function setTextStyle(e: Event) {
+    if (textStyle == "p") runCommand(setBlockType(schema.nodes.paragraph))(e);
+    else runCommand(setBlockType(schema.nodes.heading, { level: Number(textStyle[1]) }))(e);
+};
 </script>
 
 <style>
@@ -34,7 +41,7 @@ function runCommand(command: any) {
         padding: 0.25rem 0.5rem;
         margin: 0 0.25rem;
         border-radius: 0.25rem;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-family: "Liberation Mono", "Courier New", monospace;
         font-size: 1.25rem;
         background: transparent;
     }
@@ -51,6 +58,10 @@ function runCommand(command: any) {
 #hundred {
     font-size: 1.125rem;
 }
+#text-style {
+    font-size: 1.125rem;
+    font-family: "Times New Roman";
+}
 </style>
 
 <div id="toolbar">
@@ -58,6 +69,16 @@ function runCommand(command: any) {
     <img src={UndoArrowIcon} alt="Undo"/>
     <img src={RedoArrowIcon} alt="Redo"/>
     <button id="hundred">100%</button>
+    <div class="divider"></div>
+    <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>
+        <option value="p">Normal text</option>
+        <option value="h1">Heading 1</option>
+        <option value="h2">Heading 2</option>
+        <option value="h3">Heading 3</option>
+        <option value="h4">Heading 4</option>
+        <option value="h5">Heading 5</option>
+        <option value="h6">Heading 6</option>
+    </select>
     <div class="divider"></div>
     <button title="Bold" onclick={runCommand(toggleMark(schema.marks.strong))}><b>B</b></button>
     <button title="Italic" onclick={runCommand(toggleMark(schema.marks.em))}><i>I</i></button>

@@ -127,6 +127,13 @@ export const schema: Schema = new Schema({
             ],
             toDOM() { return ["u"] }
         },
+        strikethrough: {
+            parseDOM: [
+                {tag: "s"},
+                {style: "text-decoration=line-through"}
+            ],
+            toDOM() { return ["s"] }
+        },
         /// Code font mark. Represented as a `<code>` element.
         code: {
             code: true,

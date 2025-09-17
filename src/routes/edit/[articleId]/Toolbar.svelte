@@ -9,6 +9,7 @@ import UnorderedListIcon from "$lib/images/list-ul.svg";
 import OrderedListIcon from "$lib/images/list-ol.svg";
 
 import { toggleMark, setBlockType } from "prosemirror-commands";
+import { wrapInList } from "prosemirror-schema-list";
 import { schema } from "./schema";
 
 const { editorState, dispatch, focusEditor } = $props();
@@ -16,7 +17,7 @@ function runCommand(command: any) {
     return (e: Event) => {
         e.preventDefault();
         focusEditor();
-        command(editorState, dispatch);
+        console.log(command(editorState, dispatch));
     }
 }
 
@@ -92,6 +93,6 @@ function setTextStyle(e: Event) {
     <img src={SuggestionIcon} alt="Enter suggestion mode"/>
     <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
-    <img src={UnorderedListIcon} alt="Insert unordered list"/>
-    <img src={OrderedListIcon} alt="Insert ordered list"/>
+    <button title="Insert unordered list" onclick={runCommand(wrapInList(schema.nodes.unorderedList))}><img src={UnorderedListIcon} alt="Bulleted list"/></button>
+    <button title="Insert unordered list" onclick={runCommand(wrapInList(schema.nodes.orderedList))}><img src={OrderedListIcon} alt="Insert ordered list"/></button>
 </div>

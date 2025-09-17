@@ -1,4 +1,5 @@
 import { Schema } from "prosemirror-model";
+import { orderedList, bulletList, listItem } from "prosemirror-schema-list";
 
 export const schema: Schema = new Schema({
     nodes: {
@@ -82,6 +83,21 @@ export const schema: Schema = new Schema({
             selectable: false,
             parseDOM: [{tag: "br"}],
             toDOM() { return ["br"] }
+        },
+        // List node types from prosemirror-schema-list
+        unordered_list: {
+            ...bulletList,
+            content: "list_item+",
+            group: "block"
+        },
+        ordered_list: {
+            ...orderedList,
+            content: "list_item+",
+            group: "block"
+        },
+        list_item: {
+            ...listItem,
+            content: "paragraph block*"
         }
     },
     marks: {

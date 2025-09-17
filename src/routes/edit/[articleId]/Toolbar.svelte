@@ -82,8 +82,10 @@ function setTextStyle(e: Event) {
     <div class="divider"></div>
     <button title="Bold" onclick={runCommand(toggleMark(schema.marks.bold))}><b>B</b></button>
     <button title="Italic" onclick={runCommand(toggleMark(schema.marks.italic))}><i>I</i></button>
-    <button title="Underline" onclick={runCommand(toggleMark(schema.marks.bold))}><u>U</u></button>
-    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.bold))}><s>T</s></button>
+    <button title="Underline" onclick={runCommand(toggleMark(schema.marks.underline))}><u>U</u></button>
+    <button title="Strikethrough" onclick={runCommand(toggleMark(schema.marks.strikethrough))}><s>T</s></button>
+    <button title="Superscript" onclick={runCommand(toggleMark(schema.marks.superscript))} style="font-size: 1rem">X<sup>2</sup></button>
+    <button title="Subscript" onclick={runCommand(toggleMark(schema.marks.subscript))} style="font-size: 1rem">X<sub>2</sub></button>
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>
     <img src={CommentIcon} alt="Insert comment"/>

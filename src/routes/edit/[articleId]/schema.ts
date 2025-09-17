@@ -130,9 +130,18 @@ export const schema: Schema = new Schema({
         strikethrough: {
             parseDOM: [
                 {tag: "s"},
-                {style: "text-decoration=line-through"}
+                {style: "text-decoration=line-through"},
+                {style: "text-decoration=none", clearMark: m => m.type.name == "strikethrough"}
             ],
             toDOM() { return ["s"] }
+        },
+        superscript: {
+            parseDOM: [
+                {tag: "sup"},
+                {style: "vertical-align=super"},
+                {style: "vertical-align=baseline", clearMark: m => m.type.name == "superscript"}
+            ],
+            toDOM() { return ["sup"] }
         },
         /// Code font mark. Represented as a `<code>` element.
         code: {

@@ -2,10 +2,11 @@
 import { onMount } from "svelte";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { schema } from "./schema";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { DOMParser } from "prosemirror-model";
+import { history } from "prosemirror-history";
+import { schema } from "./schema";
 
 let { content: body_html, editorState = $bindable(), editorView = $bindable() } = $props();
 
@@ -18,7 +19,8 @@ onMount(() => {
 
     editorState = EditorState.create({
         plugins: [
-            keymap(baseKeymap)
+            keymap(baseKeymap),
+            history()
         ],
         doc
     });

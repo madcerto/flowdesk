@@ -7,6 +7,7 @@ import { baseKeymap } from "prosemirror-commands";
 import { DOMParser } from "prosemirror-model";
 import { splitListItem, liftListItem, sinkListItem } from "prosemirror-schema-list";
 import { InputRule, inputRules, undoInputRule, wrappingInputRule } from "prosemirror-inputrules";
+import { history } from "prosemirror-history";
 import { schema } from "./schema";
 import { tabListItem } from "./list-commands";
 
@@ -31,7 +32,8 @@ onMount(() => {
                 "Tab": tabListItem,
                 "Shift-Tab": liftListItem(schema.nodes.list_item)
             }),
-            keymap(baseKeymap)
+            keymap(baseKeymap),
+            history()
         ],
         doc
     });

@@ -10,6 +10,7 @@ import OrderedListIcon from "$lib/images/list-ol.svg";
 
 import { toggleMark, setBlockType } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
+import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
 
 const { editorState, dispatch, focusEditor } = $props();
@@ -45,6 +46,9 @@ function setTextStyle(e: Event) {
         font-family: "Liberation Mono", "Courier New", monospace;
         font-size: 1.25rem;
         background: transparent;
+        img {
+            height: 100%;
+        }
     }
     > *:hover {
         background: var(--primary-200);
@@ -67,8 +71,8 @@ function setTextStyle(e: Event) {
 
 <div id="toolbar">
 <!-- TODO: consider making all these divs with background-image so they can't be selected -->
-    <img src={UndoArrowIcon} alt="Undo"/>
-    <img src={RedoArrowIcon} alt="Redo"/>
+    <button title="Undo" onclick={runCommand(undo)}><img src={UndoArrowIcon} alt="Undo"/></button>
+    <button title="Redo" onclick={runCommand(redo)}><img src={RedoArrowIcon} alt="Redo"/></button>
     <button id="hundred">100%</button>
     <div class="divider"></div>
     <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>

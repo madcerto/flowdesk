@@ -5,8 +5,11 @@ import { EditorView } from "prosemirror-view";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { DOMParser } from "prosemirror-model";
+import { splitListItem, liftListItem, sinkListItem } from "prosemirror-schema-list";
+import { InputRule, inputRules, undoInputRule, wrappingInputRule } from "prosemirror-inputrules";
 import { history } from "prosemirror-history";
 import { schema } from "./schema";
+import { tabListItem } from "./list-commands";
 
 let { content: body_html, editorState = $bindable(), editorView = $bindable() } = $props();
 
@@ -19,6 +22,16 @@ onMount(() => {
 
     editorState = EditorState.create({
         plugins: [
+            inputRules({ rules: [
+                wrappingInputRule(/^\s*([-+*])\s$/, schema.nodes.unordered_list),
+                wrappingInputRule(/^(\d+)\.\s$/, schema.nodes.ordered_list, match => ({order: +match[1]}), (match, node) => node.childCount + node.attrs.order == +match[1]),
+            ] }),
+            keymap({
+                "Backspace": undoInputRule,
+                "Enter": splitListItem(schema.nodes.list_item),
+                "Tab": tabListItem,
+                "Shift-Tab": liftListItem(schema.nodes.list_item)
+            }),
             keymap(baseKeymap),
             history()
         ],

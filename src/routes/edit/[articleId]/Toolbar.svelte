@@ -9,6 +9,7 @@ import UnorderedListIcon from "$lib/images/list-ul.svg";
 import OrderedListIcon from "$lib/images/list-ol.svg";
 
 import { toggleMark, setBlockType } from "prosemirror-commands";
+import { wrapInList } from "prosemirror-schema-list";
 import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
 
@@ -96,6 +97,6 @@ function setTextStyle(e: Event) {
     <img src={SuggestionIcon} alt="Enter suggestion mode"/>
     <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
-    <img src={UnorderedListIcon} alt="Insert unordered list"/>
-    <img src={OrderedListIcon} alt="Insert ordered list"/>
+    <button title="Insert unordered list" onclick={runCommand(wrapInList(schema.nodes.unordered_list))}><img src={UnorderedListIcon} alt="Bulleted list"/></button>
+    <button title="Insert unordered list" onclick={runCommand(wrapInList(schema.nodes.ordered_list))}><img src={OrderedListIcon} alt="Insert ordered list"/></button>
 </div>

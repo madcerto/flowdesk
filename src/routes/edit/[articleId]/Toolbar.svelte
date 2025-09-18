@@ -17,7 +17,7 @@ function runCommand(command: any) {
     return (e: Event) => {
         e.preventDefault();
         focusEditor();
-        console.log(command(editorState, dispatch));
+        command(editorState, dispatch);
     }
 }
 

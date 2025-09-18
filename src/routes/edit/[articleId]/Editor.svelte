@@ -6,6 +6,7 @@ import { schema } from "./schema";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { DOMParser } from "prosemirror-model";
+import { splitListItem } from "prosemirror-schema-list";
 
 let { content: body_html, editorState = $bindable(), editorView = $bindable() } = $props();
 
@@ -18,6 +19,7 @@ onMount(() => {
 
     editorState = EditorState.create({
         plugins: [
+            keymap({"Enter": splitListItem(schema.nodes.list_item) }),
             keymap(baseKeymap)
         ],
         doc

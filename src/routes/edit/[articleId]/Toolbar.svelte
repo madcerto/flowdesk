@@ -23,14 +23,16 @@ function runCommand(command: any) {
     }
 }
 
-$effect(() =>
+$effect(() => {
     // Runs every time editorState changes
-    // Check which commands are available
-    // for (item in toolbarItems.textFormatting) {
-    //     if (
-    // }
-    console.log(editorState)
-)
+    // Make sure it's not undefined
+    if (editorState) {
+        getToolbarItems().textStyles.forEach(item => {
+            if (!setBlockType(item.blockType, item.args)(editorState)) textStyle = item.val;
+        });
+    }
+    console.log(editorState);
+})
 
 let textStyle: string = $state("p");
 
@@ -86,17 +88,13 @@ function setTextStyle(e: Event) {
     <button id="hundred">100%</button>
     <div class="divider"></div>
     <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>
-        <option value="p" title="Ctrl-Alt-0">Normal text</option>
-        <option value="h1" title="Ctrl-Alt-1">Heading 1</option>
-        <option value="h2" title="Ctrl-Alt-2">Heading 2</option>
-        <option value="h3" title="Ctrl-Alt-3">Heading 3</option>
-        <option value="h4" title="Ctrl-Alt-4">Heading 4</option>
-        <option value="h5" title="Ctrl-Alt-5">Heading 5</option>
-        <option value="h6" title="Ctrl-Alt-6">Heading 6</option>
+        {#each getToolbarItems().textStyles as item}
+            <option value={item.val} title="Ctrl-Alt-{item.shortcut}">{item.name}</option>
+        {/each}
     </select>
     <div class="divider"></div>
-    {#each getToolbarItems.textFormatting as item}
-        <button title={item.tooltip} onclick={runCommand(item.command)} disabled={!item.command(editorState)}>{@html item.innerHtml}</button>
+    {#each getToolbarItems().textFormatting as item}
+        <button title={item.tooltip} onclick={runCommand(item.command)} disabled={editorState && !item.command(editorState)}>{@html item.innerHtml}</button>
     {/each}
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>

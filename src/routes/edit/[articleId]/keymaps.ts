@@ -16,5 +16,11 @@ export const keymaps = {
     "Mod-Alt-0": setBlockType(schema.nodes.paragraph),
     "Mod-Alt-1": setHeading(1), "Mod-Alt-2": setHeading(2),
     "Mod-Alt-3": setHeading(3), "Mod-Alt-4": setHeading(4),
-    "Mod-Alt-5": setHeading(5), "Mod-Alt-6": setHeading(6)
+    "Mod-Alt-5": setHeading(5), "Mod-Alt-6": setHeading(6),
+    "Mod-b": toggleMark(schema.marks.bold), "Mod-B": toggleMark(schema.marks.bold),
+    "Mod-i": toggleMark(schema.marks.italic),
+    "Mod-u": toggleMark(schema.marks.underline),
+    "Alt-Shift-5": toggleMark(schema.marks.strikethrough),
+    "Mod-.": toggleMark(schema.marks.superscript),
+    "Mod-,": toggleMark(schema.marks.subscript)
 }; 

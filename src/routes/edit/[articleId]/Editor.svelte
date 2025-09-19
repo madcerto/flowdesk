@@ -5,7 +5,7 @@ import { EditorView } from "prosemirror-view";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { DOMParser } from "prosemirror-model";
-import { inputRules, wrappingInputRule } from "prosemirror-inputrules";
+import { inputRules, textblockTypeInputRule, wrappingInputRule } from "prosemirror-inputrules";
 import { history } from "prosemirror-history";
 import { schema } from "./schema";
 import { keymaps } from "./keymaps";
@@ -23,7 +23,9 @@ onMount(() => {
         plugins: [
             inputRules({ rules: [
                 wrappingInputRule(/^\s*([-+*])\s$/, schema.nodes.unordered_list),
-                wrappingInputRule(/^(\d+)\.\s$/, schema.nodes.ordered_list, match => ({order: +match[1]}), (match, node) => node.childCount + node.attrs.order == +match[1]),
+                wrappingInputRule(/^(\d+)\.\s$/, schema.nodes.ordered_list,
+                    match => ({order: Number(match[1])}), (match, node) => node.childCount + node.attrs.order == Number(match[1])),
+                textblockTypeInputRule(/^(#{1,6})\s$/, schema.nodes.heading, match => ({level: match[1].length}))
             ] }),
             keymap(keymaps),
             keymap(baseKeymap),

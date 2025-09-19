@@ -1,5 +1,5 @@
 import { undoInputRule } from "prosemirror-inputrules";
-import { splitListItem, liftListItem, sinkListItem } from "prosemirror-schema-list";
+import { splitListItem, liftListItem, sinkListItem, wrapInList } from "prosemirror-schema-list";
 import { setBlockType, toggleMark } from "prosemirror-commands";
 import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
@@ -22,5 +22,7 @@ export const keymaps = {
     "Mod-u": toggleMark(schema.marks.underline),
     "Alt-Shift-5": toggleMark(schema.marks.strikethrough),
     "Mod-.": toggleMark(schema.marks.superscript),
-    "Mod-,": toggleMark(schema.marks.subscript)
+    "Mod-,": toggleMark(schema.marks.subscript),
+    "Mod-Shift-7": wrapInList(schema.nodes.ordered_list),
+    "Mod-Shift-8": wrapInList(schema.nodes.unordered_list)
 }; 

@@ -97,6 +97,6 @@ function setTextStyle(e: Event) {
     <img src={SuggestionIcon} alt="Enter suggestion mode"/>
     <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
-    <button title="Insert unordered list" onclick={runCommand(wrapInList(schema.nodes.unordered_list))}><img src={UnorderedListIcon} alt="Bulleted list"/></button>
-    <button title="Insert unordered list" onclick={runCommand(wrapInList(schema.nodes.ordered_list))}><img src={OrderedListIcon} alt="Insert ordered list"/></button>
+    <button title="Insert unordered list (Ctrl-Shift-8)" onclick={runCommand(wrapInList(schema.nodes.unordered_list))}><img src={UnorderedListIcon} alt="Bulleted list"/></button>
+    <button title="Insert ordered list (Ctrl-Shift-7)" onclick={runCommand(wrapInList(schema.nodes.ordered_list))}><img src={OrderedListIcon} alt="Insert ordered list"/></button>
 </div>

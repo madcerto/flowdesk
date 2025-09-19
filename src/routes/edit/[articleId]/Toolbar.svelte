@@ -71,18 +71,18 @@ function setTextStyle(e: Event) {
 
 <div id="toolbar">
 <!-- TODO: consider making all these divs with background-image so they can't be selected -->
-    <button title="Undo" onclick={runCommand(undo)}><img src={UndoArrowIcon} alt="Undo"/></button>
-    <button title="Redo" onclick={runCommand(redo)}><img src={RedoArrowIcon} alt="Redo"/></button>
+    <button title="Undo (Ctrl-Z)" onclick={runCommand(undo)}><img src={UndoArrowIcon} alt="Undo"/></button>
+    <button title="Redo (Ctrl-Shift-Z)" onclick={runCommand(redo)}><img src={RedoArrowIcon} alt="Redo"/></button>
     <button id="hundred">100%</button>
     <div class="divider"></div>
     <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>
-        <option value="p">Normal text</option>
-        <option value="h1">Heading 1</option>
-        <option value="h2">Heading 2</option>
-        <option value="h3">Heading 3</option>
-        <option value="h4">Heading 4</option>
-        <option value="h5">Heading 5</option>
-        <option value="h6">Heading 6</option>
+        <option value="p" title="Ctrl-Alt-0">Normal text</option>
+        <option value="h1" title="Ctrl-Alt-1">Heading 1</option>
+        <option value="h2" title="Ctrl-Alt-2">Heading 2</option>
+        <option value="h3" title="Ctrl-Alt-3">Heading 3</option>
+        <option value="h4" title="Ctrl-Alt-4">Heading 4</option>
+        <option value="h5" title="Ctrl-Alt-5">Heading 5</option>
+        <option value="h6" title="Ctrl-Alt-6">Heading 6</option>
     </select>
     <div class="divider"></div>
     <button title="Bold" onclick={runCommand(toggleMark(schema.marks.bold))}><b>B</b></button>

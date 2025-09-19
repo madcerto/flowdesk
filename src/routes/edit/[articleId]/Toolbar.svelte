@@ -12,6 +12,7 @@ import { toggleMark, setBlockType } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
 import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
+import { getToolbarItems } from "./toolbar-items";
 
 const { editorState, dispatch, focusEditor } = $props();
 function runCommand(command: any) {
@@ -21,6 +22,15 @@ function runCommand(command: any) {
         command(editorState, dispatch);
     }
 }
+
+$effect(() =>
+    // Runs every time editorState changes
+    // Check which commands are available
+    // for (item in toolbarItems.textFormatting) {
+    //     if (
+    // }
+    console.log(editorState)
+)
 
 let textStyle: string = $state("p");
 
@@ -85,12 +95,9 @@ function setTextStyle(e: Event) {
         <option value="h6" title="Ctrl-Alt-6">Heading 6</option>
     </select>
     <div class="divider"></div>
-    <button title="Bold (Ctrl-B)" onclick={runCommand(toggleMark(schema.marks.bold))}><b>B</b></button>
-    <button title="Italic (Ctrl-I)" onclick={runCommand(toggleMark(schema.marks.italic))}><i>I</i></button>
-    <button title="Underline (Ctrl-U)" onclick={runCommand(toggleMark(schema.marks.underline))}><u>U</u></button>
-    <button title="Strikethrough (Alt-Shift-5)" onclick={runCommand(toggleMark(schema.marks.strikethrough))}><s>T</s></button>
-    <button title="Superscript (Ctrl-.)" onclick={runCommand(toggleMark(schema.marks.superscript))} style="font-size: 1rem">X<sup>2</sup></button>
-    <button title="Subscript (Ctrl-,)" onclick={runCommand(toggleMark(schema.marks.subscript))} style="font-size: 1rem">X<sub>2</sub></button>
+    {#each getToolbarItems.textFormatting as item}
+        <button title={item.tooltip} onclick={runCommand(item.command)} disabled={!item.command(editorState)}>{@html item.innerHtml}</button>
+    {/each}
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>
     <img src={CommentIcon} alt="Insert comment"/>

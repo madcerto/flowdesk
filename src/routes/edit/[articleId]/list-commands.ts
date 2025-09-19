@@ -1,4 +1,4 @@
-import { EditorState } from "prosemirror-state";
+import { EditorState, Transaction } from "prosemirror-state";
 import { sinkListItem } from "prosemirror-schema-list";
 import { schema } from "./schema";
 

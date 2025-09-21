@@ -8,7 +8,7 @@ import ImageIcon from "$lib/images/card-image.svg";
 import UnorderedListIcon from "$lib/images/list-ul.svg";
 import OrderedListIcon from "$lib/images/list-ol.svg";
 
-import { toggleMark, setBlockType } from "prosemirror-commands";
+import { setBlockType } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
 import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
@@ -27,11 +27,13 @@ $effect(() => {
     // Runs every time editorState changes
     // Make sure it's not undefined
     if (editorState) {
+        let weird = true; // Some blocks (like lists) are weird right now and all text styles will not apply to them
         getToolbarItems().textStyles.forEach(item => {
             if (!setBlockType(item.blockType, item.args)(editorState)) textStyle = item.val;
+            else weird = false;
         });
+        if (weird) textStyle = "p"; // Set to default if weird
     }
-    console.log(editorState);
 })
 
 let textStyle: string = $state("p");

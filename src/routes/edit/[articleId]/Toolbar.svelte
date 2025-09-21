@@ -81,6 +81,9 @@ function setTextStyle(e: Event) {
     font-size: 1.125rem;
     font-family: "Times New Roman";
 }
+button[disabled] > img {
+    fill: gray;
+}
 </style>
 
 <div id="toolbar">
@@ -104,6 +107,7 @@ function setTextStyle(e: Event) {
     <img src={SuggestionIcon} alt="Enter suggestion mode"/>
     <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
-    <button title="Insert unordered list (Ctrl-Shift-8)" onclick={runCommand(wrapInList(schema.nodes.unordered_list))}><img src={UnorderedListIcon} alt="Bulleted list"/></button>
-    <button title="Insert ordered list (Ctrl-Shift-7)" onclick={runCommand(wrapInList(schema.nodes.ordered_list))}><img src={OrderedListIcon} alt="Insert ordered list"/></button>
+    {#each getToolbarItems().listTypes as item}
+        <button title={item.tooltip} onclick={runCommand(wrapInList(item.nodeType))} disabled={editorState && !wrapInList(item.nodeType)(editorState)}><img src={item.icon} alt={item.iconAlt}/></button>
+    {/each}
 </div>

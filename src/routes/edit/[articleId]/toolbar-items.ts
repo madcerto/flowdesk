@@ -1,3 +1,5 @@
+import UnorderedListIcon from "$lib/images/list-ul.svg";
+import OrderedListIcon from "$lib/images/list-ol.svg";
 import { toggleMark } from "prosemirror-commands";
 import { schema } from "./schema";
 
@@ -62,6 +64,16 @@ export const getToolbarItems = () => { return {
         {
             val: "h6", shortcut: "6", name: "Heading 6",
             blockType: schema.nodes.heading, args: { level: 6 }
+        }
+    ],
+    listTypes: [
+        {
+            tooltip: "Insert unordered list (Ctrl-Shift-8)", nodeType: schema.nodes.unordered_list,
+            icon: UnorderedListIcon, iconAlt: "Bulleted list"
+        },
+        {
+            tooltip: "Insert ordered list (Ctrl-Shift-7)", nodeType: schema.nodes.ordered_list,
+            icon: OrderedListIcon, iconAlt: "Numbered list"
         }
     ]
 };};

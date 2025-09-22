@@ -2,12 +2,12 @@
 import Toolbar from "./Toolbar.svelte";
 import MetaFields from "./MetaFields.svelte";
 
-const props = $props();
+const { editorState, dispatch, focusEditor, headline } = $props();
 
 let deskName = "Opinion";
 let stageName = "Authoring";
 
-let title = $state("Arson and antisemitic graffiti heighten fears of hate crime on Drexel campus");
+let title = $state(headline);
 </script>
 
 <style>
@@ -69,6 +69,6 @@ let title = $state("Arson and antisemitic graffiti heighten fears of hate crime 
         <button>SAVE</button>
         <button>SEND</button>
     </div>
-    <Toolbar {...props} />
+    <Toolbar {editorState} {dispatch} {focusEditor} />
     <MetaFields />
 </header>

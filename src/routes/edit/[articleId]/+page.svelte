@@ -12,7 +12,7 @@ let editorState: EditorState | undefined = $state();
 let editorView: EditorView | undefined = $state();
 </script>
 
-<Header {editorState} dispatch={editorView?.dispatch} focusEditor={editorView?.focus.bind(editorView)} />
+<Header {editorState} dispatch={editorView?.dispatch} focusEditor={editorView?.focus.bind(editorView)} headline={data.headline} />
 <Editor bind:editorView bind:editorState content={data.body_html} />
 
 <footer>

@@ -1,4 +1,11 @@
-export function load() {
+import type { Cookies } from "@sveltejs/kit";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+
+dotenv.config();
+const SD_API_URL = process.env.SD_API_URL;
+
+export async function load({ params, cookies }: { params: { articleId: string }, cookies: Cookies }) {
     const SAMPLE_ARTICLE = `<p>An act of arson prompted the emergency evacuation of hundreds of students living in Race Hall, one of Drexel University's predominantly freshman residence halls on Oct. 10. A widely circulated post on Instagram stated that the attack was due to Jewish decorations on one of the doors and the dorm was targeted because of the Jewish identity of one of the residents, raising concerns about antisemitic bias and hate crimes on campus. </p>
 
 <p>According to a freshman biology student, Lahari Suraparaju, who was present at Race Hall during the time of the fire, there is video footage that captured smoke encompassing the hall, confirming the timeline of events. Two to three people were inside the suite when the fire broke out; one of them was Jewish. A recent Instagram post from the cousin of the student stated she was targeted because of her support for Israel and a family member in the Israeli Defense Forces.</p>
@@ -16,7 +23,21 @@ export function load() {
 
     `;
 
-    return {
-        body_html: SAMPLE_ARTICLE
-    };
+    // The Superdesk client stores a JWT containing the backend auth token.
+    // We don't need to validate it as the only claim is itself a token that is validated on the backend.
+    // Try to get 'session' cookie with JWT
+    let session = cookies.get("session");
+    if (session) {
+        let token_data = jwt.decode(session, { complete: true });
+        // @ts-ignore // Honestly this should be in the payload (not causing a type error) but idk Superdesk is weird
+        let auth_token = token_data?.header?.session_token;
+        // TODO: Run a test API call, and if authentication fails, redirect to login page
+        let content_item = await fetch(`${SD_API_URL}/archive/${params.articleId}`,
+                { headers: { "Authorization": `Bearer ${auth_token}` } })
+            .then((res) => res.json());
+        return {
+            body_html: content_item.body_html
+        };
+    } else { // TODO: If doesn't exist, redirect to login page
+    }
 }

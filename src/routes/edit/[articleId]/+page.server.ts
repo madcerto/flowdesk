@@ -36,6 +36,7 @@ export async function load({ params, cookies }: { params: { articleId: string },
                 { headers: { "Authorization": `Bearer ${auth_token}` } })
             .then((res) => res.json());
         return {
+            headline: content_item.headline,
             body_html: content_item.body_html
         };
     } else { // TODO: If doesn't exist, redirect to login page

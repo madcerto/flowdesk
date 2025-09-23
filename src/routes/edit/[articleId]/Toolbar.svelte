@@ -1,17 +1,14 @@
 <script lang="ts">
-import UndoArrowIcon from "$lib/images/arrow-counterclockwise.svg";
-import RedoArrowIcon from "$lib/images/arrow-clockwise.svg";
 import LinkIcon from "$lib/images/link.svg";
 import CommentIcon from "$lib/images/chat-square-text.svg";
 import SuggestionIcon from "$lib/images/pencil-square.svg";
 import ImageIcon from "$lib/images/card-image.svg";
-import UnorderedListIcon from "$lib/images/list-ul.svg";
-import OrderedListIcon from "$lib/images/list-ol.svg";
 
-import { toggleMark, setBlockType } from "prosemirror-commands";
+import { setBlockType } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
 import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
+import { getToolbarItems } from "./toolbar-items";
 
 const { editorState, dispatch, focusEditor } = $props();
 function runCommand(command: any) {
@@ -23,6 +20,21 @@ function runCommand(command: any) {
 }
 
 let textStyle: string = $state("p");
+let enableTextStyles = $state(true);
+
+$effect(() => {
+    // Runs every time editorState changes
+    // Make sure it's not undefined
+    if (editorState) {
+        let textStylesAvailable = false; // Some blocks (like lists) are weird right now and all text styles will not apply to them
+        getToolbarItems().textStyles.forEach(item => {
+            if (!setBlockType(item.blockType, item.args)(editorState)) textStyle = item.val;
+            else textStylesAvailable = true;
+        });
+        enableTextStyles = textStylesAvailable;
+        if (!textStylesAvailable) textStyle = "p"; // Set to default if none available
+    }
+})
 
 function setTextStyle(e: Event) {
     if (textStyle == "p") runCommand(setBlockType(schema.nodes.paragraph))(e);
@@ -50,7 +62,7 @@ function setTextStyle(e: Event) {
             height: 100%;
         }
     }
-    > *:hover {
+    > *:hover:not([disabled]) {
         background: var(--primary-200);
     }
 }
@@ -67,36 +79,35 @@ function setTextStyle(e: Event) {
     font-size: 1.125rem;
     font-family: "Times New Roman";
 }
+button :global(> svg) {
+    width: 20px;
+    height: 20px;
+}
 </style>
 
 <div id="toolbar">
 <!-- TODO: consider making all these divs with background-image so they can't be selected -->
-    <button title="Undo (Ctrl-Z)" onclick={runCommand(undo)}><img src={UndoArrowIcon} alt="Undo"/></button>
-    <button title="Redo (Ctrl-Shift-Z)" onclick={runCommand(redo)}><img src={RedoArrowIcon} alt="Redo"/></button>
+    {#each getToolbarItems().historyOperations as item}
+        <button title={item.tooltip} onclick={runCommand(item.command)} disabled={editorState && !item.command(editorState)}><item.icon /></button>
+    {/each}
     <button id="hundred">100%</button>
     <div class="divider"></div>
-    <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>
-        <option value="p" title="Ctrl-Alt-0">Normal text</option>
-        <option value="h1" title="Ctrl-Alt-1">Heading 1</option>
-        <option value="h2" title="Ctrl-Alt-2">Heading 2</option>
-        <option value="h3" title="Ctrl-Alt-3">Heading 3</option>
-        <option value="h4" title="Ctrl-Alt-4">Heading 4</option>
-        <option value="h5" title="Ctrl-Alt-5">Heading 5</option>
-        <option value="h6" title="Ctrl-Alt-6">Heading 6</option>
+    <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle} disabled={!enableTextStyles}>
+        {#each getToolbarItems().textStyles as item}
+            <option value={item.val} title="Ctrl-Alt-{item.shortcut}">{item.name}</option>
+        {/each}
     </select>
     <div class="divider"></div>
-    <button title="Bold (Ctrl-B)" onclick={runCommand(toggleMark(schema.marks.bold))}><b>B</b></button>
-    <button title="Italic (Ctrl-I)" onclick={runCommand(toggleMark(schema.marks.italic))}><i>I</i></button>
-    <button title="Underline (Ctrl-U)" onclick={runCommand(toggleMark(schema.marks.underline))}><u>U</u></button>
-    <button title="Strikethrough (Alt-Shift-5)" onclick={runCommand(toggleMark(schema.marks.strikethrough))}><s>T</s></button>
-    <button title="Superscript (Ctrl-.)" onclick={runCommand(toggleMark(schema.marks.superscript))} style="font-size: 1rem">X<sup>2</sup></button>
-    <button title="Subscript (Ctrl-,)" onclick={runCommand(toggleMark(schema.marks.subscript))} style="font-size: 1rem">X<sub>2</sub></button>
+    {#each getToolbarItems().textFormatting as item}
+        <button title={item.tooltip} onclick={runCommand(item.command)} disabled={editorState && !item.command(editorState)}>{@html item.innerHtml}</button>
+    {/each}
     <div class="divider"></div>
     <img src={LinkIcon} alt="Insert link"/>
     <img src={CommentIcon} alt="Insert comment"/>
     <img src={SuggestionIcon} alt="Enter suggestion mode"/>
     <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
-    <button title="Insert unordered list (Ctrl-Shift-8)" onclick={runCommand(wrapInList(schema.nodes.unordered_list))}><img src={UnorderedListIcon} alt="Bulleted list"/></button>
-    <button title="Insert ordered list (Ctrl-Shift-7)" onclick={runCommand(wrapInList(schema.nodes.ordered_list))}><img src={OrderedListIcon} alt="Insert ordered list"/></button>
+    {#each getToolbarItems().listTypes as item}
+        <button title={item.tooltip} onclick={runCommand(wrapInList(item.nodeType))} disabled={editorState && !wrapInList(item.nodeType)(editorState)}><item.icon /></button>
+    {/each}
 </div>

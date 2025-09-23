@@ -5,8 +5,6 @@ import LinkIcon from "$lib/images/link.svg";
 import CommentIcon from "$lib/images/chat-square-text.svg";
 import SuggestionIcon from "$lib/images/pencil-square.svg";
 import ImageIcon from "$lib/images/card-image.svg";
-import UnorderedListIcon from "$lib/images/list-ul.svg";
-import OrderedListIcon from "$lib/images/list-ol.svg";
 
 import { setBlockType } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
@@ -64,7 +62,7 @@ function setTextStyle(e: Event) {
             height: 100%;
         }
     }
-    > *:hover {
+    > *:hover:not([disabled]) {
         background: var(--primary-200);
     }
 }
@@ -81,8 +79,9 @@ function setTextStyle(e: Event) {
     font-size: 1.125rem;
     font-family: "Times New Roman";
 }
-button[disabled] > img {
-    fill: gray;
+button :global(> svg) {
+    width: 20px;
+    height: 20px;
 }
 </style>
 
@@ -108,6 +107,6 @@ button[disabled] > img {
     <img src={ImageIcon} alt="Insert media"/>
     <div class="divider"></div>
     {#each getToolbarItems().listTypes as item}
-        <button title={item.tooltip} onclick={runCommand(wrapInList(item.nodeType))} disabled={editorState && !wrapInList(item.nodeType)(editorState)}><img src={item.icon} alt={item.iconAlt}/></button>
+        <button title={item.tooltip} onclick={runCommand(wrapInList(item.nodeType))} disabled={editorState && !wrapInList(item.nodeType)(editorState)}><item.icon /></button>
     {/each}
 </div>

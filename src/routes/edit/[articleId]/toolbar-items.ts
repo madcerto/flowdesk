@@ -1,5 +1,5 @@
-import UnorderedListIcon from "$lib/images/list-ul.svg";
-import OrderedListIcon from "$lib/images/list-ol.svg";
+import UnorderedListIcon from "$lib/images/list-ul.svelte";
+import OrderedListIcon from "$lib/images/list-ol.svelte";
 import { toggleMark } from "prosemirror-commands";
 import { schema } from "./schema";
 

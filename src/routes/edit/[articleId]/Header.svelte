@@ -64,7 +64,7 @@ let title = $state(headline);
     <div id="primary-header">
         <!-- TODO: when highlighted, displays "headline" to indicate you're editing the headline field -->
         <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
-        <input id="headline" bind:value={title} />
+        <input id="headline" bind:value={title} autocomplete="off" />
         <button>CLOSE</button>
         <button>SAVE</button>
         <button>SEND</button>

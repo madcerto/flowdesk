@@ -1,4 +1,6 @@
 <script lang="ts">
+import { page } from "$app/state";
+import { json } from "@sveltejs/kit";
 import Toolbar from "./Toolbar.svelte";
 import MetaFields from "./MetaFields.svelte";
 
@@ -8,6 +10,14 @@ let deskName = "Opinion";
 let stageName = "Authoring";
 
 let title = $state(headline);
+
+async function saveContent() {
+    // Send POST request to the same route with all our content data
+    await fetch(page.url, { method: "POST", body: `{
+        "body_html": "${document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"')}",
+        "headline": "${title}"
+    }` });
+}
 </script>
 
 <style>
@@ -66,7 +76,7 @@ let title = $state(headline);
         <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
         <input id="headline" bind:value={title} autocomplete="off" />
         <button>CLOSE</button>
-        <button>SAVE</button>
+        <button onclick={saveContent}>SAVE</button>
         <button>SEND</button>
     </div>
     <Toolbar {editorState} {dispatch} {focusEditor} />

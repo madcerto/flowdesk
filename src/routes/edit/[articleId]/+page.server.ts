@@ -42,3 +42,9 @@ export async function load({ params, cookies }: { params: { articleId: string },
     } else { // TODO: If doesn't exist, redirect to login page
     }
 }
+
+export const actions = {
+    default: async ({ request }: { request: Request }) => {
+        console.log(await request.json());
+    }
+}

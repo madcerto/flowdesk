@@ -19,20 +19,22 @@ function runCommand(command: any) {
     }
 }
 
+let textStyle: string = $state("p");
+let enableTextStyles = $state(true);
+
 $effect(() => {
     // Runs every time editorState changes
     // Make sure it's not undefined
     if (editorState) {
-        let weird = true; // Some blocks (like lists) are weird right now and all text styles will not apply to them
+        let textStylesAvailable = false; // Some blocks (like lists) are weird right now and all text styles will not apply to them
         getToolbarItems().textStyles.forEach(item => {
             if (!setBlockType(item.blockType, item.args)(editorState)) textStyle = item.val;
-            else weird = false;
+            else textStylesAvailable = true;
         });
-        if (weird) textStyle = "p"; // Set to default if weird
+        enableTextStyles = textStylesAvailable;
+        if (!textStylesAvailable) textStyle = "p"; // Set to default if none available
     }
 })
-
-let textStyle: string = $state("p");
 
 function setTextStyle(e: Event) {
     if (textStyle == "p") runCommand(setBlockType(schema.nodes.paragraph))(e);
@@ -90,7 +92,7 @@ button :global(> svg) {
     {/each}
     <button id="hundred">100%</button>
     <div class="divider"></div>
-    <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>
+    <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle} disabled={!enableTextStyles}>
         {#each getToolbarItems().textStyles as item}
             <option value={item.val} title="Ctrl-Alt-{item.shortcut}">{item.name}</option>
         {/each}

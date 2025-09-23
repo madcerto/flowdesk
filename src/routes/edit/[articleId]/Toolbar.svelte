@@ -1,6 +1,4 @@
 <script lang="ts">
-import UndoArrowIcon from "$lib/images/arrow-counterclockwise.svg";
-import RedoArrowIcon from "$lib/images/arrow-clockwise.svg";
 import LinkIcon from "$lib/images/link.svg";
 import CommentIcon from "$lib/images/chat-square-text.svg";
 import SuggestionIcon from "$lib/images/pencil-square.svg";
@@ -87,8 +85,9 @@ button :global(> svg) {
 
 <div id="toolbar">
 <!-- TODO: consider making all these divs with background-image so they can't be selected -->
-    <button title="Undo (Ctrl-Z)" onclick={runCommand(undo)}><img src={UndoArrowIcon} alt="Undo"/></button>
-    <button title="Redo (Ctrl-Shift-Z)" onclick={runCommand(redo)}><img src={RedoArrowIcon} alt="Redo"/></button>
+    {#each getToolbarItems().historyOperations as item}
+        <button title={item.tooltip} onclick={runCommand(item.command)} disabled={editorState && !item.command(editorState)}><item.icon /></button>
+    {/each}
     <button id="hundred">100%</button>
     <div class="divider"></div>
     <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle}>

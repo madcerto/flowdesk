@@ -1,9 +1,16 @@
 import UnorderedListIcon from "$lib/images/list-ul.svelte";
 import OrderedListIcon from "$lib/images/list-ol.svelte";
+import UndoArrowIcon from "$lib/images/arrow-counterclockwise.svelte";
+import RedoArrowIcon from "$lib/images/arrow-clockwise.svelte";
 import { toggleMark } from "prosemirror-commands";
+import { undo, redo } from "prosemirror-history";
 import { schema } from "./schema";
 
 export const getToolbarItems = () => { return {
+    historyOperations: [
+        { tooltip: "Undo (Ctrl-Z)", command: undo, icon: UndoArrowIcon },
+        { tooltip: "Redo (Ctrl-Shift-Z)", command: redo, icon: RedoArrowIcon }
+    ],
     textFormatting: [
         {   tooltip: "Bold (Ctrl-B)",
             command: toggleMark(schema.marks.bold),

@@ -1,6 +1,5 @@
 <script lang="ts">
-import { page } from "$app/state";
-import { json } from "@sveltejs/kit";
+import { enhance } from "$app/forms";
 import Toolbar from "./Toolbar.svelte";
 import MetaFields from "./MetaFields.svelte";
 
@@ -10,14 +9,13 @@ let deskName = "Opinion";
 let stageName = "Authoring";
 
 let title = $state(headline);
+let bodyHtmlInput: HTMLInputElement;
+let etagInput: HTMLInputElement;
 
 async function saveContent() {
-    // Send POST request to the same route with all our content data
-    await fetch(page.url, { method: "POST", body: `{
-        "_etag": "${etag}",
-        "body_html": "${document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"')}",
-        "headline": "${title}"
-    }` });
+    // Set body_html hidden input to the article content
+    bodyHtmlInput.value = document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"') || "";
+    etagInput.value = etag;
 }
 </script>
 
@@ -39,11 +37,11 @@ async function saveContent() {
             background: inherit;
             font-family: serif;
         }
-        button {
+        button, input[type=submit] {
             font-size: 1rem;
             color: var(--primary-800);
         }
-        button:hover {
+        button:hover, input[type=submit]:hover {
             color: var(--secondary-4);
             cursor: pointer;
         }
@@ -72,14 +70,18 @@ async function saveContent() {
 </style>
 
 <header>
-    <div id="primary-header">
-        <!-- TODO: when highlighted, displays "headline" to indicate you're editing the headline field -->
-        <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
-        <input id="headline" bind:value={title} autocomplete="off" />
-        <button>CLOSE</button>
-        <button onclick={saveContent}>SAVE</button>
-        <button>SEND</button>
-    </div>
-    <Toolbar {editorState} {dispatch} {focusEditor} />
-    <MetaFields />
+    <form method="post" use:enhance={() => async ({ update }) => update({ reset: false })}>
+        <div id="primary-header">
+            <!-- TODO: when highlighted, displays "headline" to indicate you're editing the headline field -->
+            <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
+            <input id="headline" name="headline" bind:value={title} autocomplete="off" />
+            <button>CLOSE</button>
+            <input type="submit" value="SAVE" onclick={saveContent} />
+            <button>SEND</button>
+            <input hidden name="body_html" bind:this={bodyHtmlInput} />
+            <input hidden name="_etag" bind:this={etagInput} />
+        </div>
+        <Toolbar {editorState} {dispatch} {focusEditor} />
+        <MetaFields />
+    </form>
 </header>

@@ -26,7 +26,7 @@ export async function load({ params, cookies }: { params: { articleId: string },
 
 export const actions = {
     default: async ({ request, params, cookies }: { request: Request, params: { articleId: string }, cookies: Cookies }) => {
-        let content_item = await request.json();
+        let content_item = await request.formData();
         // Try to get 'session' cookie containing JWT
         let session = cookies.get("session");
         if (session) {
@@ -38,11 +38,11 @@ export const actions = {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${auth_token}`, "Content-Type": "application/json",
-                    "If-Match": content_item._etag
+                    "If-Match": content_item.get("_etag")
                 },
                 body: `{
-                    "body_html": "${content_item.body_html.replace(/"/g, '\\"')}",
-                    "headline": "${content_item.headline}"
+                    "body_html": "${content_item.get("body_html")?.replace(/"/g, '\\"')}",
+                    "headline": "${content_item.get("headline")}"
                 }`
             })
                 .then((res) => res.json());

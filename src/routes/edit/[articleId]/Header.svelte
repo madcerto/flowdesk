@@ -8,7 +8,6 @@ const { editorState, dispatch, focusEditor, headline, etag } = $props();
 let deskName = "Opinion";
 let stageName = "Authoring";
 
-let title = $state(headline);
 let bodyHtmlInput: HTMLInputElement;
 let etagInput: HTMLInputElement;
 
@@ -74,7 +73,7 @@ async function saveContent() {
         <div id="primary-header">
             <!-- TODO: when highlighted, displays "headline" to indicate you're editing the headline field -->
             <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
-            <input id="headline" name="headline" bind:value={title} autocomplete="off" />
+            <input id="headline" name="headline" value={headline} autocomplete="off" />
             <button>CLOSE</button>
             <input type="submit" value="SAVE" onclick={saveContent} />
             <button>SEND</button>

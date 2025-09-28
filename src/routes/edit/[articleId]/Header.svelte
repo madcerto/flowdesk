@@ -4,10 +4,7 @@ import Toolbar from "./Toolbar.svelte";
 import MetaFields from "./MetaFields.svelte";
 import LoaderIcon from "$lib/images/loader-2-line.svelte";
 
-const { editorState, dispatch, focusEditor, headline, etag } = $props();
-
-let deskName = "Opinion";
-let stageName = "Authoring";
+const { editorState, dispatch, focusEditor, headline, etag, desk, stage } = $props();
 
 let saving = $state(false);
 </script>
@@ -95,7 +92,7 @@ let saving = $state(false);
         }}>
         <div id="primary-header">
             <!-- TODO: when highlighted, displays "headline" to indicate you're editing the headline field -->
-            <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
+            <p id="desk-stage">{desk.name.toUpperCase()} / {stage.name.toUpperCase()}</p>
             <input id="headline" name="headline" value={headline} autocomplete="off" />
             <button>CLOSE</button>
             <span id="submit-button">

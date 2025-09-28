@@ -1,5 +1,4 @@
 import type { Cookies } from "@sveltejs/kit";
-import { json } from "@sveltejs/kit";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 

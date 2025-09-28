@@ -16,10 +16,18 @@ export async function load({ params, cookies }: { params: { articleId: string },
         // @ts-ignore // Honestly this should be in the payload (not causing a type error) but idk Superdesk is weird
         let auth_token = token_data?.header?.session_token;
         // TODO: Run a test API call, and if authentication fails, redirect to login page
-        let content_item = await fetch(`${SD_API_URL}/archive/${params.articleId}`,
+        let content = await fetch(`${SD_API_URL}/archive/${params.articleId}`,
                 { headers: { "Authorization": `Bearer ${auth_token}` } })
             .then((res) => res.json());
-        return content_item;
+        let desk = await fetch(`${SD_API_URL}/desks/${content.task.desk}`,
+                { headers: { "Authorization": `Bearer ${auth_token}` } })
+            .then((res) => res.json());
+        let stage = await fetch(`${SD_API_URL}/stages/${content.task.stage}`,
+                { headers: { "Authorization": `Bearer ${auth_token}` } })
+            .then((res) => res.json());
+        return {
+            content, desk, stage
+        };
     } else { // TODO: If doesn't exist, redirect to login page
     }
 }

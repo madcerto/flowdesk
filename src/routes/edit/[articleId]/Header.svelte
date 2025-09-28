@@ -7,15 +7,6 @@ const { editorState, dispatch, focusEditor, headline, etag } = $props();
 
 let deskName = "Opinion";
 let stageName = "Authoring";
-
-let bodyHtmlInput: HTMLInputElement;
-let etagInput: HTMLInputElement;
-
-async function saveContent() {
-    // Set body_html hidden input to the article content
-    bodyHtmlInput.value = document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"') || "";
-    etagInput.value = etag;
-}
 </script>
 
 <style>
@@ -69,16 +60,18 @@ async function saveContent() {
 </style>
 
 <header>
-    <form method="post" use:enhance={() => async ({ update }) => update({ reset: false })}>
+    <form method="post" use:enhance={({ formData }) => {
+            formData.append("body_html", document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"') || "");
+            formData.append("_etag", etag);
+            return async ({ update }) => update({ reset: false });
+        }}>
         <div id="primary-header">
             <!-- TODO: when highlighted, displays "headline" to indicate you're editing the headline field -->
             <p id="desk-stage">{deskName.toUpperCase()} / {stageName.toUpperCase()}</p>
             <input id="headline" name="headline" value={headline} autocomplete="off" />
             <button>CLOSE</button>
-            <input type="submit" value="SAVE" onclick={saveContent} />
+            <input type="submit" value="SAVE" />
             <button>SEND</button>
-            <input hidden name="body_html" bind:this={bodyHtmlInput} />
-            <input hidden name="_etag" bind:this={etagInput} />
         </div>
         <Toolbar {editorState} {dispatch} {focusEditor} />
         <MetaFields />

@@ -92,7 +92,7 @@ button :global(> svg) {
     {/each}
     <button id="hundred">100%</button>
     <div class="divider"></div>
-    <select id="text-style" name="text-style" bind:value={textStyle} onchange={setTextStyle} disabled={!enableTextStyles}>
+    <select id="text-style" bind:value={textStyle} onchange={setTextStyle} disabled={!enableTextStyles}>
         {#each getToolbarItems().textStyles as item}
             <option value={item.val} title="Ctrl-Alt-{item.shortcut}">{item.name}</option>
         {/each}

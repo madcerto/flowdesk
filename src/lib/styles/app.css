@@ -9,6 +9,10 @@
     --primary-100: #055C9D1f;
     --primary-200: #055C9D3f;
     --primary-300: #055C9D5f;
+    --primary-400: #055C9D7f;
+    --primary-500: #055C9D9f;
+    --primary-600: #055C9Dbf;
+    --primary-700: #055C9Ddf;
     --primary-800: #055C9Dff;
     --secondary-2: #73BBEE;
     --secondary-3: #FEF5AC;
@@ -23,6 +27,7 @@
 body {
     background-color: var(--neutral-primary-1);
     margin: 0;
+    font-size: 14pt;
 }
 
 .hidden {

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
-const SD_API_URL = process.env.SD_API_URL;
+const SD_API_URL = process.env.VITE_SD_API_URL;
 
 export async function load({ params, cookies }: { params: { articleId: string }, cookies: Cookies }) {
     // The Superdesk client stores a JWT containing the backend auth token.

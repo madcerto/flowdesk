@@ -5,10 +5,11 @@ import { page } from "$app/state";
 import LoadingIcon from "$lib/images/loader-2-line.svelte";
 
 let usernameInput: HTMLInputElement, passwordInput: HTMLInputElement;
-let logging_in = $state(false);
+let loggingIn = $state(false);
+let loginError: string | null = $state(null);
 
 async function login() {
-    logging_in = true;
+    loggingIn = true;
     let auth_data = await fetch(`${import.meta.env.VITE_SD_API_URL}/auth_db`, {
         method: "POST",
         credentials: "include",
@@ -16,15 +17,28 @@ async function login() {
         body: `{ "username": "${usernameInput.value}", "password": "${passwordInput.value}" }`
     })
     .then((res) => res.json());
-    // TODO: check if success, handle if error and set logging_in to false
+    console.log(auth_data);
+    // Handle if error and set logging_in to false
+    if (auth_data._status == "ERR") {
+        loggingIn = false;
+        if (auth_data._issues?.credentials) loginError = "invalid credentials.";
+        else loginError = auth_data._message;
+        return;
+    }
 
     let user_res = await fetch(`${import.meta.env.VITE_SD_API_URL}/${auth_data._links.related.user.href}`, {
         method: "GET",
         headers: { "Content-Type": "application/json;charset=UTF-8", "Authorization": `Bearer ${auth_data.token}` },
     })
     .then((res) => res.json());
-    // TODO: check if success, handle if error and set logging_in to false
+    // Handle if error and set logging_in to false
+    if (user_res._status == "ERR") {
+        loggingIn = false;
+        loginError = user_res._message;
+        return;
+    }
 
+    // Set local storage with login data
     localStorage.setItem("sess:href",  auth_data._links.self.href);
     localStorage.setItem("sess:id",  auth_data._id);
     localStorage.setItem("sess:token",  `Basic ${btoa(auth_data.token + ':')}`);
@@ -125,13 +139,14 @@ input:focus {
 <main>
     <div id="form">
         <h1>LOGO</h1>
+        {#if loginError != null}<p style:color="red">Error: {loginError}</p>{/if}
         <label for="username">Username: </label><br/>
         <input name="username" bind:this={usernameInput} /><br/>
         <label for="password">Password: </label><br/>
         <input name="password" type="password" bind:this={passwordInput} /><br/>
         <span id="login-button">
-            <button onclick={login} class:logging-in={logging_in} disabled={logging_in}>Log in</button>
-            {#if logging_in}<LoadingIcon />{/if}
+            <button onclick={login} class:logging-in={loggingIn} disabled={loggingIn}>Log in</button>
+            {#if loggingIn}<LoadingIcon />{/if}
         </span>
     </div>
 </main>

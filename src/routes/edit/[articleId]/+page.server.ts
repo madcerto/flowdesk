@@ -1,11 +1,12 @@
 import type { Cookies } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
-const SD_API_URL = process.env.SD_API_URL;
+const SD_API_URL = process.env.VITE_SD_API_URL;
 
-export async function load({ params, cookies }: { params: { articleId: string }, cookies: Cookies }) {
+export async function load({ params, cookies, url }: { params: { articleId: string }, cookies: Cookies, url: URL }) {
     // The Superdesk client stores a JWT containing the backend auth token.
     // We don't need to validate it as the only claim is itself a token that is validated on the backend.
     // Try to get 'session' cookie with JWT
@@ -27,8 +28,7 @@ export async function load({ params, cookies }: { params: { articleId: string },
         return {
             content, desk, stage
         };
-    } else { // TODO: If doesn't exist, redirect to login page
-    }
+    } else redirect(307, `/login?redirect=${url.origin+url.pathname}`); // If no session, redirect to login page
 }
 
 export const actions = {

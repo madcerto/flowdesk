@@ -1,5 +1,7 @@
 <script lang="ts">
 import "$lib/styles/app.css";
+import { goto } from "$app/navigation";
+import { page } from "$app/state";
 
 let usernameInput: HTMLInputElement, passwordInput: HTMLInputElement;
 
@@ -22,6 +24,8 @@ async function login() {
     localStorage.setItem("sess:id",  auth_data._id);
     localStorage.setItem("sess:token",  `Basic ${btoa(auth_data.token + ':')}`);
     localStorage.setItem("sess:user",  JSON.stringify(user_res));
+
+    goto(page.url.searchParams.get("redirect") || "/playground/edit"); //TODO: redirect to workflow page when there is one
 }
 </script>
 <style>

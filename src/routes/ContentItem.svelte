@@ -8,10 +8,9 @@ const { item } = $props();
     padding: 1rem;
     gap: 0.25rem;
     align-items: center;
-    line-height: 0.25rem;
 }
 .desk-stage {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1rem;
     background: var(--secondary-3);
@@ -22,18 +21,35 @@ const { item } = $props();
 }
 .headline {
     padding: 0 0.75rem;
+    font-size: 1.25rem;
+    font-weight: bold;
 }
 .authors-list {
     /* background: var(--neutral-primary-2); */
     /* border-radius: 0.25rem; */
     padding: 0 0.75rem;
     margin: 0;
-    line-height: 0.25rem;
     flex: 1 0 0;
+    display: flex;
+    flex-direction: columns;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 1rem;
+    p:not(.author) {
+        line-height: 1rem;
+    }
+}
+.byline {
+    font-style: italic;
+    font-weight: bold;
 }
 .author {
+    background: var(--neutral-primary-2);
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
     color: var(--neutral-secondary-2);
-    vertical-align: center;
+    font-weight: bold;
 }
 .edit-btn {
     background: var(--primary-800);
@@ -42,17 +58,19 @@ const { item } = $props();
     padding: 0.5rem;
     color: white;
     text-decoration: none;
+    font-weight: bold;
 }
 </style>
 
 <div class="content-item">
-    <!-- <p id="desk-stage">{desk.name.toUpperCase()} / {stage.name.toUpperCase()}</p> -->
     <p class="desk-stage">{item.task.desk} / {item.task.stage}</p>
-    <p class="headline"><b>{item.headline}</b></p>
-    {#if item.authors}<p>by</p>{/if}
+    <p class="headline" title="Headline">{item.headline}</p>
+    {#if item.authors || item.byline}<p>by</p>{/if}
     <span class="authors-list">
-    {#each item.authors as author}
-        <p class="author"><b>{author.sub_label}</b></p>
+        {#if item.byline}<p class="byline" title="Byline">{item.byline}</p>{/if}
+    {#each item.authors as author, idx}
+        {#if idx > 0 || item.byline}<p>, </p>{/if}
+        <p class="author">{author.sub_label}</p>
     {/each}
     </span>
     <a class="edit-btn" href={`/edit/${item._id}`}>Edit</a>

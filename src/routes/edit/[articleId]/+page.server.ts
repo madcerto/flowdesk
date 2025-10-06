@@ -35,13 +35,13 @@ export const actions = {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json", "If-Match": etag },
                 body: `{
-                    "body_html": "${body_html?.replace(/"/g, '\\"')}",
+                    "body_html": "${body_html?.replaceAll('class=\\"ProseMirror-trailingBreak\\"', '').replace(/"/g, '\\"')}",
                     "headline": "${content_item.get("headline")}"
                 }`
-            }); // TODO: handle potential errors here
+            });
         } catch (e) { // If authentication fails, redirect to login page
             if (e instanceof AuthenticationError) redirectToLogin(url.origin+url.pathname);
-            else throw e;
+            else throw e; // TODO: handle potential errors here
         }
     }
 }

@@ -21,7 +21,10 @@
     --neutral-primary-2: #E3EBF2;
     --neutral-primary-3: #B0BDC1;
     --neutral-primary-4: #68869A;
+    --neutral-secondary-1: #B4DFFC;
+    --neutral-secondary-2: #094886;
     --neutral-secondary-3: #0C4160;
+    --accent-blue: #2479DF;
 }
 
 body {

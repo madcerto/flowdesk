@@ -5,9 +5,10 @@ const { item } = $props();
 <style>
 .content-item {
     display: flex;
-    padding: 1rem;
+    margin: 1rem;
     gap: 0.25rem;
     align-items: center;
+    border-left: 2px solid var(--accent-blue);
 }
 .desk-stage {
     font-size: 1rem;
@@ -16,6 +17,7 @@ const { item } = $props();
     background: var(--secondary-3);
     padding: 0.25rem 0.75rem;
     margin: 0;
+    margin-left: 0.75rem;
     border-radius: 0.25rem;
     vertical-align: center;
 }

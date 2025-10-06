@@ -10,17 +10,6 @@ const { item } = $props();
     align-items: center;
     border-left: 2px solid var(--accent-blue);
 }
-.desk-stage {
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1rem;
-    background: var(--secondary-3);
-    padding: 0.25rem 0.75rem;
-    margin: 0;
-    margin-left: 0.75rem;
-    border-radius: 0.25rem;
-    vertical-align: center;
-}
 .headline {
     padding: 0 0.75rem;
     font-size: 1.25rem;
@@ -65,7 +54,6 @@ const { item } = $props();
 </style>
 
 <div class="content-item">
-    <p class="desk-stage">{item.task.desk} / {item.task.stage}</p>
     <p class="headline" title="Headline">{item.headline}</p>
     {#if item.authors || item.byline}<p>by</p>{/if}
     <span class="authors-list">

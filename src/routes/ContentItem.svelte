@@ -5,10 +5,13 @@ const { item } = $props();
 <style>
 .content-item {
     display: flex;
-    margin: 1rem;
+    flex-direction: row;
     gap: 0.25rem;
     align-items: center;
+    margin: 1rem;
+    border: 1px solid var(--neutral-primary-3);
     border-left: 2px solid var(--accent-blue);
+    background: white;
 }
 .headline {
     padding: 0 0.75rem;
@@ -16,8 +19,6 @@ const { item } = $props();
     font-weight: bold;
 }
 .authors-list {
-    /* background: var(--neutral-primary-2); */
-    /* border-radius: 0.25rem; */
     padding: 0 0.75rem;
     margin: 0;
     flex: 1 0 0;
@@ -47,6 +48,7 @@ const { item } = $props();
     border-radius: 0.25rem;
     line-height: 1rem;
     padding: 0.5rem;
+    margin: 0.5rem 1rem !important;
     color: white;
     text-decoration: none;
     font-weight: bold;

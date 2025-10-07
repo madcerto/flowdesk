@@ -83,8 +83,8 @@ input {
   transition: border-color 0.2s, background 0.2s;
 }
 input:focus {
-  border-color: var(--primary-800);
-  background: var(--primary-200);
+  border-color: var(--neutral-secondary-2);
+  background: var(--neutral-secondary-1);
   outline: none;
 }
 
@@ -120,7 +120,7 @@ input:focus {
     }
 }
 #login-button:hover {
-    background: var(--primary-500);
+    background: var(--accent-blue);
 }
 #login-button:active {
   transform: scale(0.98);

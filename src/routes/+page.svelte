@@ -9,6 +9,12 @@ const getStageItems = (stageId: string) => data.archive._items.filter((item: any
 </script>
 
 <style>
+main {
+    max-width: 1280px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
 .desk-name {
     margin: 0 1rem;
     padding-bottom: 0.5rem;
@@ -29,7 +35,7 @@ const getStageItems = (stageId: string) => data.archive._items.filter((item: any
 }
 </style>
 
-<div style:width="75%">
+<main>
     {#each data.desks._items as desk}
         <h3 class="desk-name">{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
@@ -41,4 +47,4 @@ const getStageItems = (stageId: string) => data.archive._items.filter((item: any
             {/each}
         {/each}
     {/each}
-</div>
+</main>

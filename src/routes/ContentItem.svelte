@@ -5,13 +5,32 @@ const { item } = $props();
 <style>
 .content-item {
     display: flex;
-    flex-direction: row;
-    gap: 0.25rem;
-    align-items: center;
+    flex-direction: column;
     margin: 1rem;
     border: 1px solid var(--neutral-primary-3);
     border-left: 2px solid var(--accent-blue);
     background: white;
+    div:nth-child(1) {
+        display: flex;
+        flex-direction: row;
+        gap: 0.25rem;
+        align-items: center;
+        * {
+            margin: 0.25rem 0;
+        }
+    }
+}
+.categories {
+    display: flex;
+    flex-direction: row;
+}
+.category {
+    font-size: 0.875rem;
+    font-weight: bold;
+    background: var(--accent-purple);
+    padding: 0.25rem 0.75rem;
+    margin: 0 0 0.75rem 0.75rem;
+    border-radius: 0.25rem;
 }
 .headline {
     padding: 0 0.75rem;
@@ -20,16 +39,11 @@ const { item } = $props();
 }
 .authors-list {
     padding: 0 0.75rem;
-    margin: 0;
     flex: 1 0 0;
     display: flex;
-    flex-direction: columns;
     gap: 0.5rem;
     align-items: center;
     font-size: 1rem;
-    p:not(.author) {
-        line-height: 1rem;
-    }
 }
 .byline {
     font-style: italic;
@@ -37,7 +51,6 @@ const { item } = $props();
 }
 .author {
     background: var(--neutral-primary-2);
-    width: fit-content;
     padding: 0.5rem;
     border-radius: 0.5rem;
     color: var(--neutral-secondary-2);
@@ -56,14 +69,21 @@ const { item } = $props();
 </style>
 
 <div class="content-item">
-    <p class="headline" title="Headline">{item.headline}</p>
-    {#if item.authors || item.byline}<p>by</p>{/if}
-    <span class="authors-list">
-        {#if item.byline}<p class="byline" title="Byline">{item.byline}</p>{/if}
-    {#each item.authors as author, idx}
-        {#if idx > 0 || item.byline}<p>, </p>{/if}
-        <p class="author">{author.sub_label}</p>
+    <div>
+        <p class="headline" title="Headline">{item.headline}</p>
+        {#if item.authors || item.byline}<p>by</p>{/if}
+        <span class="authors-list">
+            {#if item.byline}<p class="byline" title="Byline">{item.byline}</p>{/if}
+        {#each item.authors as author, idx}
+            {#if idx > 0 || item.byline}<p>, </p>{/if}
+            <p class="author">{author.sub_label}</p>
+        {/each}
+        </span>
+        <a class="edit-btn" href={`/edit/${item._id}`}>Edit</a>
+    </div>
+    <div class="categories">
+    {#each item.anpa_category as category}
+        <p class="category">{category.name.toUpperCase()}</p>
     {/each}
-    </span>
-    <a class="edit-btn" href={`/edit/${item._id}`}>Edit</a>
+    </div>
 </div>

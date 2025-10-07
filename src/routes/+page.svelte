@@ -1,11 +1,41 @@
 <script lang="ts">
 import "$lib/styles/app.css";
 import ContentItem from "./ContentItem.svelte";
+import PlusIcon from "$lib/images/plus-lg.svelte";
 
 const { data } = $props();
 
+let archive = $state(data.archive);
+
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
-const getStageItems = (stageId: string) => data.archive._items.filter((item: any) => item.task.stage == stageId);
+const stageItems: Map<string, any[]> = $derived.by(() => {
+    return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id)]));
+});
+
+$inspect(stageItems);
+
+const createContentItem = (desk: any, stageId: string) => async () => {
+    let body = `{
+        "version":1,
+        "profile":"${desk.default_content_profile}",
+        "template":"${desk.default_content_template}",
+        "task":{
+            "desk":"${desk._id}",
+            "stage":"${stageId}",
+            "user":"${JSON.parse(localStorage.getItem("sess:user") || "")._id}"
+        }
+    }`;
+
+    let new_item = await fetch(`${import.meta.env.VITE_SD_API_URL}/archive`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body
+    })
+    .then((res) => res.json());
+    // TODO: handle potential errors here
+    archive._items.unshift(new_item);
+}
 </script>
 
 <style>
@@ -21,11 +51,29 @@ main {
     padding-top: 1rem;
     border-bottom: 1px solid var(--neutral-primary-3);
 }
-.stage-name {
+.stage-header {
     margin: 1rem;
     margin-bottom: 0;
+    display: flex;
+    flex-direction: row;
+    button {
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 0.25rem 0.5rem;
+        margin: 0 1rem;
+        background: var(--accent-green);
+        border-radius: 0.25rem;
+        cursor: pointer;
+        :global(svg) {
+            height: 100%;
+            fill: white;
+        }
+    }
+}
+.stage-name {
+    margin: 0;
     padding: 0.25rem 0.75rem;
-    width: fit-content;
     background: var(--secondary-3);
     border-radius: 0.25rem;
 }
@@ -39,8 +87,11 @@ main {
     {#each data.desks._items as desk}
         <h3 class="desk-name">{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
-            <h5 class="stage-name">{stage.name.toUpperCase()}</h5>
-            {#each getStageItems(stage._id) as item}
+            <div class="stage-header">
+                <h5 class="stage-name">{stage.name.toUpperCase()}</h5>
+                <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
+            </div>
+            {#each stageItems.get(stage._id) || [] as item}
                 <ContentItem {item} />
             {:else}
                 <p class="empty">No items...</p>

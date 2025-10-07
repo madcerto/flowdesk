@@ -45,7 +45,7 @@ main {
     flex-direction: column;
     margin: auto;
 }
-.desk-name {
+h3 {
     margin: 0 1rem;
     padding-bottom: 0.5rem;
     padding-top: 1rem;
@@ -71,7 +71,7 @@ main {
         }
     }
 }
-.stage-name {
+h5 {
     margin: 0;
     padding: 0.25rem 0.75rem;
     background: var(--secondary-3);
@@ -85,10 +85,10 @@ main {
 
 <main>
     {#each data.desks._items as desk}
-        <h3 class="desk-name">{desk.name.toUpperCase()}</h3>
+        <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
             <div class="stage-header">
-                <h5 class="stage-name">{stage.name.toUpperCase()}</h5>
+                <h5>{stage.name.toUpperCase()}</h5>
                 <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
             </div>
             {#each stageItems.get(stage._id) || [] as item}

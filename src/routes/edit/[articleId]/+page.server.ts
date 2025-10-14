@@ -27,6 +27,10 @@ export const actions = {
         let content_item = await request.formData();
         let etag = content_item.get("_etag") as string;
         let body_html = content_item.get("body_html") as string;
+        let body = `{
+            "body_html": "${body_html?.replaceAll('class=\\"ProseMirror-trailingBreak\\"', '').replace(/"/g, '\\"')}",
+            "headline": "${content_item.get("headline")}"
+        }`;
 
         try {
             let session_token = getSessionToken(cookies);
@@ -34,10 +38,7 @@ export const actions = {
             let res = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/archive/${params.articleId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json", "If-Match": etag },
-                body: `{
-                    "body_html": "${body_html?.replaceAll('class=\\"ProseMirror-trailingBreak\\"', '').replace(/"/g, '\\"')}",
-                    "headline": "${content_item.get("headline")}"
-                }`
+                body
             });
         } catch (e) { // If authentication fails, redirect to login page
             if (e instanceof AuthenticationError) redirectToLogin(url.origin+url.pathname);

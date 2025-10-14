@@ -9,7 +9,7 @@ let archive = $state(data.archive);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
 const stageItems: Map<string, any[]> = $derived.by(() => {
-    return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id)]));
+    return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id && item.state != "spiked")]));
 });
 
 $inspect(stageItems);
@@ -36,6 +36,10 @@ const createContentItem = (desk: any, stageId: string) => async () => {
     // TODO: handle potential errors here
     archive._items.unshift(new_item);
 }
+
+function deleteContentItem(itemId: string) {
+    archive._items = archive._items.filter((item: any) => item._id != itemId);
+}
 </script>
 
 <style>
@@ -57,9 +61,6 @@ h3 {
     display: flex;
     flex-direction: row;
     button {
-        font-family: inherit;
-        font-size: 1rem;
-        font-weight: bold;
         padding: 0.25rem 0.5rem;
         margin: 0 1rem;
         background: var(--accent-green);
@@ -92,7 +93,7 @@ h5 {
                 <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
             </div>
             {#each stageItems.get(stage._id) || [] as item}
-                <ContentItem {item} />
+                <ContentItem {item} {deleteContentItem} />
             {:else}
                 <p class="empty">No items...</p>
             {/each}

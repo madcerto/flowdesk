@@ -1,12 +1,29 @@
 <script lang="ts">
-const { item } = $props();
+import BinIcon from "$lib/images/trash-fill.svelte";
+const { item, deleteContentItem } = $props();
+
+async function deleteItem(_e: Event) {
+    let deleteData = await fetch(`${import.meta.env.VITE_SD_API_URL}/archive/spike/${item._id}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json", "If-Match": item._etag },
+        body: `{ "state": "spiked" }`
+    })
+    .then((res) => res.json())
+    .catch((err) => ({ _status: "ERR", _message: `delete request failed: ${err}` }));
+    if (deleteData._status == "ERR") { // TODO: handle potential errors here
+        console.log(deleteData);
+    } else {
+        deleteContentItem(item._id);
+    }
+}
 </script>
 
 <style>
 .content-item {
     display: flex;
     flex-direction: column;
-    margin: 1rem;
+    margin: 0.5rem 1rem;
     border: 1px solid var(--neutral-primary-3);
     border-left: 2px solid var(--accent-blue);
     background: white;
@@ -61,10 +78,22 @@ const { item } = $props();
     border-radius: 0.25rem;
     line-height: 1rem;
     padding: 0.5rem;
-    margin: 0.5rem 1rem !important;
+    margin: 0.5rem 0.5rem !important;
     color: white;
     text-decoration: none;
     font-weight: bold;
+}
+.delete-btn {
+    padding: 0.5rem;
+    margin: 0.25rem 1rem !important;
+    background: var(--accent-red);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    justify-content: center;
+    :global(svg) {
+        fill: white;
+        height: 100%;
+    }
 }
 </style>
 
@@ -80,6 +109,8 @@ const { item } = $props();
         {/each}
         </span>
         <a class="edit-btn" href={`/edit/${item._id}`}>Edit</a>
+        <button class="delete-btn" onclick={deleteItem}><BinIcon /></button>
+        <!-- TODO: vertically center the bin icon inside the button -->
     </div>
     <div class="categories">
     {#each item.anpa_category as category}

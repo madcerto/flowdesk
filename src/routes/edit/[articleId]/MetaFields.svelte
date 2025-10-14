@@ -2,7 +2,7 @@
     import OpenFieldsIcon from "$lib/images/arrow-bar-right.svg";
     import CloseFieldsIcon from "$lib/images/arrow-bar-left.svg";
 
-    let open = $state(true);
+    let open = $state(false);
 
     function toggle() { open = !open; }
 </script>

@@ -17,6 +17,6 @@ let editorView: EditorView | undefined = $state();
     headline={data.content.headline} etag={data.content._etag} desk={data.desk} stage={data.stage} />
 <Editor bind:editorView bind:editorState content={data.content.body_html || ""} />
 
-<footer>
-    <p>Editing article: {page.params.articleId}</p>
-</footer>
+<!-- <footer> -->
+<!--     <p>Editing article: {page.params.articleId}</p> -->
+<!-- </footer> -->

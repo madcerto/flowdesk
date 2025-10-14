@@ -10,41 +10,36 @@ let loginError: string | null = $state(null);
 
 async function login() {
     loggingIn = true;
-    let auth_data = await fetch(`${import.meta.env.VITE_SD_API_URL}/auth_db`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        body: `{ "username": "${usernameInput.value}", "password": "${passwordInput.value}" }`
-    })
-    .then((res) => res.json());
-    console.log(auth_data);
-    // Handle if error and set logging_in to false
-    if (auth_data._status == "ERR") {
+    try {
+        let auth_data = await fetch(`${import.meta.env.VITE_SD_API_URL}/auth_db`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            body: `{ "username": "${usernameInput.value}", "password": "${passwordInput.value}" }`
+        })
+        .then((res) => res.json()).catch((err) => ({ _status: "ERR", _message: `server error: ${err}` }));
+        if (auth_data._status == "ERR")
+            throw Error(auth_data._issues?.credentials ? "invalid credentials." : auth_data._message);
+
+        let user_res = await fetch(`${import.meta.env.VITE_SD_API_URL}/${auth_data._links.related.user.href}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json;charset=UTF-8", "Authorization": `Bearer ${auth_data.token}` },
+        })
+        .then((res) => res.json()).catch((err) => ({ _status: "ERR", _message: `server error: ${err}` }));
+        if (user_res._status == "ERR")
+            throw Error(user_res._message);
+
+        // Login has succeeded, now set local storage with login data
+        localStorage.setItem("sess:href",  auth_data._links.self.href);
+        localStorage.setItem("sess:id",  auth_data._id);
+        localStorage.setItem("sess:token",  `Basic ${btoa(auth_data.token + ':')}`);
+        localStorage.setItem("sess:user",  JSON.stringify(user_res));
+
+        goto(page.url.searchParams.get("redirect") || "/playground/edit"); //TODO: redirect to workflow page when there is one
+    } catch (e: any) { // Handle if error and set loggingIn to false
         loggingIn = false;
-        if (auth_data._issues?.credentials) loginError = "invalid credentials.";
-        else loginError = auth_data._message;
-        return;
+        loginError = e.message;
     }
-
-    let user_res = await fetch(`${import.meta.env.VITE_SD_API_URL}/${auth_data._links.related.user.href}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json;charset=UTF-8", "Authorization": `Bearer ${auth_data.token}` },
-    })
-    .then((res) => res.json());
-    // Handle if error and set logging_in to false
-    if (user_res._status == "ERR") {
-        loggingIn = false;
-        loginError = user_res._message;
-        return;
-    }
-
-    // Set local storage with login data
-    localStorage.setItem("sess:href",  auth_data._links.self.href);
-    localStorage.setItem("sess:id",  auth_data._id);
-    localStorage.setItem("sess:token",  `Basic ${btoa(auth_data.token + ':')}`);
-    localStorage.setItem("sess:user",  JSON.stringify(user_res));
-
-    goto(page.url.searchParams.get("redirect") || "/playground/edit"); //TODO: redirect to workflow page when there is one
 }
 </script>
 <style>

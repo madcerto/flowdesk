@@ -12,9 +12,10 @@ export async function load({ params, cookies, url }: { params: { articleId: stri
         let content = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/archive/${params.articleId}`);
         let desk = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/desks/${content.task.desk}`);
         let stage = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/stages/${content.task.stage}`);
+        let type = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/content_types/${content.type}`);
 
         return {
-            content, desk, stage
+            content, desk, stage, type
         };
     } catch (e) { // If authentication fails, redirect to login page
         if (e instanceof AuthenticationError) redirectToLogin(url.origin+url.pathname);

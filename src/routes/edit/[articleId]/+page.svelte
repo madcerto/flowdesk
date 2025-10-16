@@ -10,11 +10,14 @@ const { data } = $props();
 
 let editorState: EditorState | undefined = $state();
 let editorView: EditorView | undefined = $state();
+
+let metaFields = new Map(Object.entries(data.type.editor));
 </script>
 
 <Header
     {editorState} dispatch={editorView?.dispatch} focusEditor={editorView?.focus.bind(editorView)}
-    headline={data.content.headline} etag={data.content._etag} desk={data.desk} stage={data.stage} />
+    headline={data.content.headline} etag={data.content._etag} desk={data.desk} stage={data.stage}
+    {metaFields} />
 <Editor bind:editorView bind:editorState content={data.content.body_html || ""} />
 
 <!-- <footer> -->

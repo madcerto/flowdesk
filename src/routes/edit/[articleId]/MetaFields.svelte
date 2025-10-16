@@ -1,9 +1,9 @@
 <script lang="ts">
     import OpenFieldsIcon from "$lib/images/arrow-bar-right.svg";
     import CloseFieldsIcon from "$lib/images/arrow-bar-left.svg";
-    import { fieldNames } from "./meta-field-relationships";
+    import { fieldNames, fieldVocabs } from "./meta-field-relationships";
 
-    const { metaFields }: { metaFields: Map<string, any> } = $props();
+    const { metaFields, schema, vocabs }: { metaFields: Map<string, any>, schema: Map<string, any>, vocabs: any } = $props();
 
     const headerFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "header")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
     const contentFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "content")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
@@ -48,7 +48,7 @@
             flex-direction: column;
         }
         label { color: var(--neutral-secondary-3); }
-        input {
+        input, select {
             background: var(--neutral-primary-2);
             border-bottom: 2px solid transparent;
             padding: 0.25rem;
@@ -70,7 +70,16 @@
         <div id="meta-fields" class={open ? "" : "hidden"}>
         {#each headerFieldIds as field}
             <div>
+            {#if fieldVocabs[field]}
+                <select name={field} class={metaFields.get(field).sdWidth + "-width"}>
+                    {#if schema.get(field)?.nullable}<option></option>{/if}
+                {#each vocabs.get(fieldVocabs[field])?.items as item}
+                    <option value={item.qcode}>{item.name}</option>
+                {/each}
+                </select>
+            {:else}
                 <input name={field} class={metaFields.get(field).sdWidth + "-width"}/>
+            {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}
                     <span style:color="var(--accent-red)">{metaFields.get(field).required ? "*" : ""}</span>
@@ -81,7 +90,16 @@
         {#each contentFieldIds as field}
         {#if fieldNames[field]}
             <div>
+            {#if fieldVocabs[field]}
+                <select name={field} class="full-width">
+                    {#if schema.get(field)?.nullable}<option></option>{/if}
+                {#each vocabs.get(fieldVocabs[field])?.items as item}
+                    <option value={item.qcode}>{item.name}</option>
+                {/each}
+                </select>
+            {:else}
                 <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""}/>
+            {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}
                     <span style:color="var(--accent-red)">{metaFields.get(field).required ? "*" : ""}</span>

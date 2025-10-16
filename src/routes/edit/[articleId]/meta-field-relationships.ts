@@ -30,3 +30,16 @@ export const fieldNames: IDictionary<string | null> = {
   "anpa_take_key": "Take key",
   "company_codes": "Company codes"
 }; 
+
+export const fieldVocabs: IDictionary<string | null> = {
+  "anpa_category": "categories",
+  "genre": "genre",
+  "language": "languages",
+  "place": "locators",
+  "priority": "priority",
+  "subject": "Subject",
+  "urgency": "urgency",
+  "usageterms": "usageterms",
+  "anpa_take_key": "Take key",
+  "company_codes": "Company codes"
+}; 

@@ -4,7 +4,7 @@ import Toolbar from "./Toolbar.svelte";
 import MetaFields from "./MetaFields.svelte";
 import LoaderIcon from "$lib/images/loader-2-line.svelte";
 
-const { editorState, dispatch, focusEditor, headline, etag, desk, stage, metaFields } = $props();
+const { editorState, dispatch, focusEditor, headline, etag, desk, stage, metaFields, schema, vocabs } = $props();
 
 let saving = $state(false);
 </script>
@@ -103,6 +103,6 @@ let saving = $state(false);
             <button>SEND</button>
         </div>
         <Toolbar {editorState} {dispatch} {focusEditor} />
-        <MetaFields {metaFields}/>
+        <MetaFields {metaFields} {schema} {vocabs}/>
     </form>
 </header>

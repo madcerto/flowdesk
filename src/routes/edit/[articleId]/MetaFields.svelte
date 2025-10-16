@@ -5,7 +5,8 @@
 
     const { metaFields }: { metaFields: Map<string, any> } = $props();
 
-    const fieldIds = [...metaFields.keys().filter((f) => metaFields.get(f))].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
+    const headerFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "header")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
+    const contentFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "content")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
 
     let open = $state(false);
 
@@ -67,7 +68,7 @@
         <img src={CloseFieldsIcon} alt="Hide meta fields" title="Hide meta fields" class={open ? "" : "hidden"} aria-hidden="true" onclick={toggle}/>
         <img src={OpenFieldsIcon} alt="Show meta fields" title="Show meta fields" class={open ? "hidden" : ""} aria-hidden="true" onclick={toggle}/>
         <div id="meta-fields" class={open ? "" : "hidden"}>
-        {#each fieldIds as field}
+        {#each headerFieldIds as field}
             <div>
                 <input name={field} class={metaFields.get(field).sdWidth + "-width"}/>
                 <label for={field}>
@@ -75,6 +76,18 @@
                     <span style:color="var(--accent-red)">{metaFields.get(field).required ? "*" : ""}</span>
                 </label>
             </div>
+        {/each}
+        <hr />
+        {#each contentFieldIds as field}
+        {#if fieldNames[field]}
+            <div>
+                <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""}/>
+                <label for={field}>
+                    {fieldNames[field]?.toUpperCase()}
+                    <span style:color="var(--accent-red)">{metaFields.get(field).required ? "*" : ""}</span>
+                </label>
+            </div>
+        {/if}
         {/each}
         </div>
     </div>

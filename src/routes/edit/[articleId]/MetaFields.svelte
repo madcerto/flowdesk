@@ -55,8 +55,8 @@
         label { color: var(--neutral-secondary-3); }
         input, select {
             background: var(--neutral-primary-2);
-            border-bottom: 2px solid transparent;
-            padding: 0.25rem;
+            border-bottom: 2px solid var(--neutral-primary-3);
+            padding: 0.25rem 0.5rem;
         }
         input:focus-visible {
             outline: none;
@@ -66,6 +66,11 @@
     .full-width { width: 24rem; }
     .half-width { width: 11.625rem; }
     .quarter-width { width: 5.4375rem; }
+    hr {
+        border-bottom: 1px solid var(--neutral-primary-3);
+        width: 100%;
+        margin: 0.75rem 0;
+    }
 </style>
 
 <div id="meta-fields-container">

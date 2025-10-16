@@ -5,13 +5,14 @@
     import "./multi-select.css";
     import { fieldNames, fieldVocabs } from "./meta-field-relationships";
 
-    const { metaFields, schema, vocabs }: { metaFields: Map<string, any>, schema: Map<string, any>, vocabs: any } = $props();
-    if (schema.has("genre")) schema.set("genre", { ...schema.get("genre"), type: "string" }); // WORKAROUND! Genre is type list even though that doesn't make sense...
+    const { metaFields, schema, vocabs, item }: { metaFields: Map<string, any>, schema: Map<string, any>, vocabs: any, item: any } = $props();
+    // if (schema.has("genre")) schema.set("genre", { ...schema.get("genre"), type: "string" }); // WORKAROUND! Genre is type list even though that doesn't make sense...
 
     const headerFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "header")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
     const contentFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "content")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
 
     const multiOptions = (field: string) => vocabs.get(fieldVocabs[field])?.items.map((i: any) => ({ name: i.name, value: i.qcode }));
+    const multiValues = (field: string) => Object.getOwnPropertyDescriptor(item, field)?.value?.map((i: any) => i.qcode);
 
     let open = $state(false);
 
@@ -81,10 +82,13 @@
         {#each headerFieldIds as field}
             <div>
             {#if fieldVocabs[field]}
-                {#if schema.get(field).type == "list"}
-                    <MultiSelect class={"multi-select " + metaFields.get(field).sdWidth + "-width"} items={multiOptions(field)} value={[]} />
+                {#if schema.get(field)?.type == "list"}
+                    <MultiSelect
+                        class={"multi-select " + metaFields.get(field).sdWidth + "-width"}
+                        items={multiOptions(field)}
+                        value={multiValues(field) || []} />
                 {:else}
-                    <select name={field} class={metaFields.get(field).sdWidth + "-width"}>
+                    <select name={field} class={metaFields.get(field).sdWidth + "-width"} value={Object.getOwnPropertyDescriptor(item,field)?.value}>
                         {#if schema.get(field)?.nullable}<option></option>{/if}
                     {#each vocabs.get(fieldVocabs[field])?.items as item}
                         <option value={item.qcode}>{item.name}</option>
@@ -92,7 +96,7 @@
                     </select>
                 {/if}
             {:else}
-                <input name={field} class={metaFields.get(field).sdWidth + "-width"}/>
+                <input name={field} class={metaFields.get(field).sdWidth + "-width"} value={Object.getOwnPropertyDescriptor(item,field)?.value}/>
             {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}
@@ -105,14 +109,14 @@
         {#if fieldNames[field]}
             <div>
             {#if fieldVocabs[field]}
-                <select name={field} class="full-width">
+                <select name={field} class="full-width" value={Object.getOwnPropertyDescriptor(item,field)?.value}>
                     {#if schema.get(field)?.nullable}<option></option>{/if}
                 {#each vocabs.get(fieldVocabs[field])?.items as item}
                     <option value={item.qcode}>{item.name}</option>
                 {/each}
                 </select>
             {:else}
-                <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""}/>
+                <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""} value={Object.getOwnPropertyDescriptor(item,field)?.value}/>
             {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}

@@ -18,7 +18,7 @@ let vocabs = new Map(data.vocabularies._items.map((vocab: any) => [vocab._id, vo
 
 <Header
     {editorState} dispatch={editorView?.dispatch} focusEditor={editorView?.focus.bind(editorView)}
-    headline={data.content.headline} etag={data.content._etag} desk={data.desk} stage={data.stage}
+    item={data.content} desk={data.desk} stage={data.stage}
     {metaFields} {schema} {vocabs} />
 <Editor bind:editorView bind:editorState content={data.content.body_html || ""} />
 

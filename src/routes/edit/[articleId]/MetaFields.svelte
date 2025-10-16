@@ -1,12 +1,17 @@
 <script lang="ts">
+    import { MultiSelect } from "flowbite-svelte";
     import OpenFieldsIcon from "$lib/images/arrow-bar-right.svg";
     import CloseFieldsIcon from "$lib/images/arrow-bar-left.svg";
+    import "./multi-select.css";
     import { fieldNames, fieldVocabs } from "./meta-field-relationships";
 
     const { metaFields, schema, vocabs }: { metaFields: Map<string, any>, schema: Map<string, any>, vocabs: any } = $props();
+    if (schema.has("genre")) schema.set("genre", { ...schema.get("genre"), type: "string" }); // WORKAROUND! Genre is type list even though that doesn't make sense...
 
     const headerFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "header")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
     const contentFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "content")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
+
+    const multiOptions = (field: string) => vocabs.get(fieldVocabs[field])?.items.map((i: any) => ({ name: i.name, value: i.qcode }));
 
     let open = $state(false);
 
@@ -71,12 +76,16 @@
         {#each headerFieldIds as field}
             <div>
             {#if fieldVocabs[field]}
-                <select name={field} class={metaFields.get(field).sdWidth + "-width"}>
-                    {#if schema.get(field)?.nullable}<option></option>{/if}
-                {#each vocabs.get(fieldVocabs[field])?.items as item}
-                    <option value={item.qcode}>{item.name}</option>
-                {/each}
-                </select>
+                {#if schema.get(field).type == "list"}
+                    <MultiSelect class={"multi-select " + metaFields.get(field).sdWidth + "-width"} items={multiOptions(field)} value={[]} />
+                {:else}
+                    <select name={field} class={metaFields.get(field).sdWidth + "-width"}>
+                        {#if schema.get(field)?.nullable}<option></option>{/if}
+                    {#each vocabs.get(fieldVocabs[field])?.items as item}
+                        <option value={item.qcode}>{item.name}</option>
+                    {/each}
+                    </select>
+                {/if}
             {:else}
                 <input name={field} class={metaFields.get(field).sdWidth + "-width"}/>
             {/if}

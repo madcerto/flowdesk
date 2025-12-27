@@ -114,7 +114,7 @@ export async function fetchJsonAuthenticated(
     init?: RequestInit
 ): Promise<any> {
     let json = await fetch(url, { ...init, headers: { "Authorization": `Bearer ${session_token}`, ...init?.headers } })
-        .then((res) => res.json());
+        .then((res) => res.json()); // TODO: handle if res is not json
     if (json._status == "ERR") {
         if (json._issues?.auth) throw new AuthenticationError();
         else throw new Error(JSON.stringify(json));

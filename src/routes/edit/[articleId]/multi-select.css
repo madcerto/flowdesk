@@ -1,0 +1,81 @@
+.multi-select {
+    font-size: 1rem;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: var(--neutral-primary-2);
+    padding: 0 0.5rem;
+    min-height: 2rem;
+    span {
+        border-radius: 0.5rem;
+        div {
+            display: inline-flex;
+            /* align-items: center; */
+            justify-content: center;
+            background: var(--accent-purple);
+            font-weight: bold;
+            border-radius: 0.25rem;
+            margin: 0 0.125rem;
+            padding: 0 0.5rem;
+            button {
+                background: transparent;
+                margin: 0.125rem;
+                border-radius: 0.25rem;
+                padding: 0 0.125rem;
+                margin-inline-start: 0.375rem;
+                margin-inline-end: -0.375rem;
+                span { display: none } /* TODO: Screen-reader only */
+                svg {
+                    width: 0.75rem;
+                    height: 0.75rem;
+                }
+            }
+            button:hover {
+                background: var(--neutral-primary-4); /* TODO: better color */
+            }
+        }
+    }
+    div.ms-auto {
+        display: flex;
+        align-items: center;
+        margin-inline-start: auto;
+        button {
+            background: transparent;
+            margin: 0;
+            padding: 0;
+            span { display: none } /* TODO: Screen-reader only */
+            svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+        }
+        button:hover {
+            background: var(--primary-200);
+        }
+        svg {
+            margin-inline-start: 0.25rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            cursor: pointer;
+        }
+    }
+    div.absolute { /* absolute z-50 p-3 flex flex-col gap-1 max-h-64 bg-white border border-gray-300 dark:bg-gray-700 dark:border-gray-600 start-0 top-[calc(100%+1rem)] rounded-lg cursor-pointer overflow-y-scroll w-full */
+        position: absolute;
+        z-index: 50;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        max-height: 16rem;
+        background: white;
+        inset-inline-start: 0;
+        top: 100%;
+        cursor: pointer;
+        overflow-y: scroll;
+        width: 100%;
+    }
+}
+.multi-select.full-width { width: 24rem; }
+.multi-select.half-width { width: 11.625rem; }
+.multi-select.quarter-width { width: 5.4375rem; }

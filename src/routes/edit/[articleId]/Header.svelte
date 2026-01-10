@@ -83,7 +83,15 @@ let saving = $state(false);
 <header>
     <form method="post" use:enhance={({ formData }) => {
             formData.append("body_html", document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"') || "");
+            // Put quotes around all values of type string
+            for (const key of formData.keys()) {
+                if (schema.get(key).type == "string") {
+                    let quoted_val = '"' + formData.get(key) + '"';
+                    formData.set(key, quoted_val);
+                }
+            }
             formData.append("_etag", item._etag);
+
             saving = true;
             return async ({ update }) => {
                 // TODO: if redirecting, save formData in local storage or somewhere

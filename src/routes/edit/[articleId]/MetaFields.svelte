@@ -84,6 +84,7 @@
             {#if fieldVocabs[field]}
                 {#if schema.get(field)?.type == "list"}
                     <MultiSelect
+                        name={field}
                         class={"multi-select " + metaFields.get(field).sdWidth + "-width"}
                         items={multiOptions(field)}
                         value={multiValues(field) || []} />

@@ -30,7 +30,14 @@ export const actions = {
         let etag = content_item.get("_etag") as string;
 
         let bodyObj: any = {};
-        content_item.forEach((val, key) => { if (val && key != "_etag") bodyObj[key] = val });
+        content_item.forEach((val, key) => {
+            if (val && key != "_etag") {
+                let jsonVal = JSON.parse(val as string);
+                if (Array.isArray(bodyObj[key])) bodyObj[key] = [...bodyObj[key], jsonVal];
+                else if (bodyObj[key]) bodyObj[key] = [bodyObj[key], jsonVal];
+                else if (jsonVal) bodyObj[key] = jsonVal;
+            }
+        });
 
         try {
             let session_token = getSessionToken(cookies);

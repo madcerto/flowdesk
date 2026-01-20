@@ -28,11 +28,9 @@ export const actions = {
     default: async ({ request, params, cookies, url }: { request: Request, params: { articleId: string }, cookies: Cookies, url: URL }) => {
         let content_item = await request.formData();
         let etag = content_item.get("_etag") as string;
-        let body_html = content_item.get("body_html") as string;
 
         let bodyObj: any = {};
         content_item.forEach((val, key) => { if (val && key != "_etag") bodyObj[key] = val });
-        if (bodyObj.body_html) bodyObj.body_html = body_html?.replaceAll('class=\\"ProseMirror-trailingBreak\\"', '').replace(/"/g, '\\"');
 
         try {
             let session_token = getSessionToken(cookies);

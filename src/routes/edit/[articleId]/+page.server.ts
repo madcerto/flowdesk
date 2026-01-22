@@ -26,21 +26,24 @@ export async function load({ params, cookies, url }: { params: { articleId: stri
 
 export const actions = {
     default: async ({ request, params, cookies, url }: { request: Request, params: { articleId: string }, cookies: Cookies, url: URL }) => {
-        let content_item = await request.formData();
-        let etag = content_item.get("_etag") as string;
-
-        let bodyObj: any = {};
-        content_item.forEach((val, key) => {
-            if (val && key != "_etag") {
-                let jsonVal = JSON.parse(val as string);
-                if (Array.isArray(bodyObj[key])) bodyObj[key] = [...bodyObj[key], jsonVal];
-                else if (bodyObj[key]) bodyObj[key] = [bodyObj[key], jsonVal];
-                else if (jsonVal) bodyObj[key] = jsonVal;
-            }
-        });
-
         try {
             let session_token = getSessionToken(cookies);
+
+            let content_item = await request.formData();
+            let etag = content_item.get("_etag") as string;
+            let content_type: any = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/content_types/${content_item.get("_type")}`);
+
+            let bodyObj: any = {};
+            content_item.forEach((val, key) => {
+                if (val && key != "_etag" && key != "_type") {
+                    let jsonVal = JSON.parse(val as string);
+                    if (content_type.schema[key].type == "list") {
+                        if (bodyObj[key]) bodyObj[key] = [...bodyObj[key], jsonVal];
+                        else bodyObj[key] = [jsonVal];
+                    }
+                    else if (jsonVal) bodyObj[key] = jsonVal;
+                }
+            });
 
             let res = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/archive/${params.articleId}`, {
                 method: "PATCH",

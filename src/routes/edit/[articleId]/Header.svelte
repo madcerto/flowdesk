@@ -91,6 +91,7 @@ let saving = $state(false);
                 }
             }
             formData.append("_etag", item._etag);
+            formData.append("_type", item.type);
 
             saving = true;
             return async ({ update }) => {

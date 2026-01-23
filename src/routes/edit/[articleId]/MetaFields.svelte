@@ -97,7 +97,7 @@
                     </select>
                 {/if}
             {:else}
-                <input name={field} class={metaFields.get(field).sdWidth + "-width"} value={Object.getOwnPropertyDescriptor(item,field)?.value}/>
+                <input name={field} class={metaFields.get(field).sdWidth + "-width"} value={Object.getOwnPropertyDescriptor(item,field)?.value} autocomplete="off"/>
             {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}
@@ -117,7 +117,7 @@
                 {/each}
                 </select>
             {:else}
-                <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""} value={Object.getOwnPropertyDescriptor(item,field)?.value}/>
+                <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""} value={Object.getOwnPropertyDescriptor(item,field)?.value} autocomplete="off"/>
             {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}

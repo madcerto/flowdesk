@@ -45,8 +45,6 @@ function deleteContentItem(itemId: string) {
 <style>
 main {
     max-width: 1280px;
-    display: flex;
-    flex-direction: column;
     margin: auto;
 }
 h3 {
@@ -54,6 +52,10 @@ h3 {
     padding-bottom: 0.5rem;
     padding-top: 1rem;
     border-bottom: 1px solid var(--neutral-primary-3);
+}
+.stage {
+    display: flex;
+    flex-direction: column;
 }
 .stage-header {
     margin: 1rem;
@@ -88,15 +90,17 @@ h5 {
     {#each data.desks._items as desk}
         <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
-            <div class="stage-header">
-                <h5>{stage.name.toUpperCase()}</h5>
-                <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
+            <div class="stage">
+                <div class="stage-header">
+                    <h5>{stage.name.toUpperCase()}</h5>
+                    <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
+                </div>
+                {#each stageItems.get(stage._id) || [] as item}
+                    <ContentItem {item} {deleteContentItem} />
+                {:else}
+                    <p class="empty">No items...</p>
+                {/each}
             </div>
-            {#each stageItems.get(stage._id) || [] as item}
-                <ContentItem {item} {deleteContentItem} />
-            {:else}
-                <p class="empty">No items...</p>
-            {/each}
         {/each}
     {/each}
 </main>

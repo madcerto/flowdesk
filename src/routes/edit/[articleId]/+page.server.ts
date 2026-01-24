@@ -36,12 +36,15 @@ export const actions = {
             let bodyObj: any = {};
             content_item.forEach((val, key) => {
                 if (val && key != "_etag" && key != "_type") {
-                    let jsonVal = JSON.parse(val as string);
                     if (content_type.schema[key].type == "list") {
+                        let jsonVal = JSON.parse(val as string);
                         if (bodyObj[key]) bodyObj[key] = [...bodyObj[key], jsonVal];
                         else bodyObj[key] = [jsonVal];
                     }
-                    else if (jsonVal) bodyObj[key] = jsonVal;
+                    else if (content_type.schema[key].type == "string") {
+                        bodyObj[key] = JSON.parse(`"${val}"`);
+                    }
+                    else bodyObj[key] = JSON.parse(val as string);
                 }
             });
 

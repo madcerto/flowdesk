@@ -11,8 +11,8 @@
     const headerFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "header")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
     const contentFieldIds = [...metaFields.keys().filter((f) => metaFields.get(f)?.section == "content")].sort((a, b) => metaFields.get(a).order - metaFields.get(b).order );
 
-    const multiOptions = (field: string) => vocabs.get(fieldVocabs[field])?.items.map((i: any) => ({ name: i.name, value: i.qcode }));
-    const multiValues = (field: string) => Object.getOwnPropertyDescriptor(item, field)?.value?.map((i: any) => i.qcode);
+    const multiOptions = (field: string) => vocabs.get(fieldVocabs[field])?.items.map((i: any) => ({ name: i.name, value: JSON.stringify(i) }));
+    const multiValues = (field: string) => Object.getOwnPropertyDescriptor(item, field)?.value?.map((i: any) => JSON.stringify(i));
 
     let open = $state(false);
 
@@ -84,6 +84,7 @@
             {#if fieldVocabs[field]}
                 {#if schema.get(field)?.type == "list"}
                     <MultiSelect
+                        name={field}
                         class={"multi-select " + metaFields.get(field).sdWidth + "-width"}
                         items={multiOptions(field)}
                         value={multiValues(field) || []} />
@@ -96,7 +97,7 @@
                     </select>
                 {/if}
             {:else}
-                <input name={field} class={metaFields.get(field).sdWidth + "-width"} value={Object.getOwnPropertyDescriptor(item,field)?.value}/>
+                <input name={field} class={metaFields.get(field).sdWidth + "-width"} style:color={(field == "ednote") ? "var(--accent-red)" : ""} value={Object.getOwnPropertyDescriptor(item,field)?.value} autocomplete="off"/>
             {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}
@@ -116,7 +117,7 @@
                 {/each}
                 </select>
             {:else}
-                <input name={field} class="full-width" style:color={(field == "ednote") ? "var(--accent-red)" : ""} value={Object.getOwnPropertyDescriptor(item,field)?.value}/>
+                <input name={field} class="full-width" value={Object.getOwnPropertyDescriptor(item,field)?.value} autocomplete="off"/>
             {/if}
                 <label for={field}>
                     {fieldNames[field]?.toUpperCase()}

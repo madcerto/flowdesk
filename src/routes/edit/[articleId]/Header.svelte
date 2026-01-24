@@ -84,6 +84,8 @@ let saving = $state(false);
     <form method="post" use:enhance={({ formData }) => {
             formData.append("body_html", document.querySelector(".ProseMirror")?.innerHTML.replace(/"/g, '\\"') || "");
             formData.append("_etag", item._etag);
+            formData.append("_type", item.type);
+
             saving = true;
             return async ({ update }) => {
                 // TODO: if redirecting, save formData in local storage or somewhere

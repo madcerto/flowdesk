@@ -5,6 +5,7 @@ import PlusIcon from "$lib/images/plus-lg.svelte";
 
 const { data } = $props();
 
+let highlightedStage = $state(null);
 let archive = $state(data.archive);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
@@ -50,6 +51,7 @@ function moveContentItem(itemId: string, deskId: string, stageId: string) {
         return item;
     });
 }
+function endDrag() { highlightedStage = null; }
 </script>
 
 <style>
@@ -66,9 +68,19 @@ h3 {
 .stage {
     display: flex;
     flex-direction: column;
+    position: relative;
+    margin: 0.25rem;
+    margin-bottom: 0;
+}
+.stage-overlay {
+    background-color: #00000011;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 7px;
 }
 .stage-header {
-    margin: 1rem;
+    margin: 0.75rem;
     margin-bottom: 0;
     display: flex;
     flex-direction: row;
@@ -101,13 +113,17 @@ h5 {
         <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
             <div class="stage" role="list"
-                ondragover={(e) => e.preventDefault()} ondrop={(ev: DragEvent) => moveContentItem(ev.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
+                ondragover={(e) => { e.preventDefault(); highlightedStage=stage._id }}
+                ondrop={(ev: DragEvent) => moveContentItem(ev.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
+                {#if highlightedStage == stage._id}
+                <div class="stage-overlay"></div>
+                {/if}
                 <div class="stage-header">
                     <h5>{stage.name.toUpperCase()}</h5>
                     <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
                 </div>
                 {#each stageItems.get(stage._id) || [] as item}
-                    <ContentItem {item} {deleteContentItem} />
+                    <ContentItem {item} {deleteContentItem} {endDrag} />
                 {:else}
                     <p class="empty">No items...</p>
                 {/each}

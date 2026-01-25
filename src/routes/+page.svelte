@@ -42,14 +42,23 @@ function deleteContentItem(itemId: string) {
     archive._items = archive._items.filter((item: any) => item._id != itemId);
 }
 
-function moveContentItem(itemId: string, deskId: string, stageId: string) {
-    archive._items = archive._items.map((item: any) => {
-        if (item._id == itemId) {
-            item.task.desk = deskId;
-            item.task.stage = stageId
-        }
-        return item;
-    });
+async function moveContentItem(itemId: string, deskId: string, stageId: string) {
+    let itemIdx = archive._items.findIndex((item: any) => item._id == itemId);
+    if (archive._items[itemIdx].task.stage == stageId) return;
+    let moveResponse = await fetch(`${import.meta.env.VITE_SD_API_URL}/archive/${itemId}/move`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: `{ "task": { "desk": "${deskId}", "stage": "${stageId}" } }`
+    })
+    .then((res) => res.json())
+    .catch((err) => ({ _status: "ERR", _message: `move request failed: ${err}` }));
+    if (moveResponse._status == "ERR") { // TODO: handle potential errors here
+        console.log(moveResponse);
+    } else {
+        archive._items[itemIdx].task.desk = deskId;
+        archive._items[itemIdx].task.stage = stageId
+    }
 }
 function endDrag() { highlightedStage = null; }
 </script>

@@ -7,6 +7,7 @@ const { data } = $props();
 
 let dragging = $state(false);
 let highlightedStage = $derived(dragging ? "" : null);
+let publishHovered = $state(false);
 let archive = $state(data.archive);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
@@ -113,6 +114,16 @@ h5 {
     margin: 1rem 2rem;
     font-style: italic;
 }
+.publish {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 2rem;
+    padding: 2rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 16px 8px rgba(0, 0, 0, 0.2);
+}
 </style>
 
 <main>
@@ -137,4 +148,10 @@ h5 {
             </div>
         {/each}
     {/each}
+    {#if dragging}
+        <div class="publish" role="dialog" tabindex="0"
+            style:background={publishHovered ? "var(--neutral-primary-3)" : "var(--neutral-primary-1)"}
+            ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
+            ondrop={() => publishHovered = false}>PUBLISH</div>
+    {/if}
 </main>

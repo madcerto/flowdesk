@@ -1,5 +1,5 @@
 <script lang="ts">
-let { publishing = $bindable() } = $props();
+let { publishing = $bindable(), subscribers } = $props();
 
 let dialog: HTMLDialogElement;
 
@@ -43,7 +43,9 @@ form {
             <button id="close-publishing" onclick={() => dialog.close()}>close</button>
             <label for="subscribers">Target Subscribers:</label>
             <select id="subscribers">
-                <option>Wordpress</option>
+            {#each subscribers as subscriber}
+                <option value={subscriber._id}>{subscriber.name}</option>
+            {/each}
             </select>
             <input type="submit" value="Publish" />
         </form>

@@ -156,5 +156,5 @@ h5 {
             ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
             ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>PUBLISH</div>
     {/if}
-    <PublishDialog bind:publishing={publishing} />
+    <PublishDialog bind:publishing={publishing} subscribers={data.subscribers._items} />
 </main>

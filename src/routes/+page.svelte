@@ -1,7 +1,7 @@
 <script lang="ts">
 import "$lib/styles/app.css";
-import ContentItem from "./ContentItem.svelte";
 import PlusIcon from "$lib/images/plus-lg.svelte";
+import ContentItem from "./ContentItem.svelte";
 
 const { data } = $props();
 
@@ -13,8 +13,6 @@ const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any)
 const stageItems: Map<string, any[]> = $derived.by(() => {
     return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id && item.state != "spiked")]));
 });
-
-$inspect(stageItems);
 
 const createContentItem = (desk: any, stageId: string) => async () => {
     let body = `{
@@ -123,7 +121,7 @@ h5 {
         {#each getDeskStages(desk._id) as stage}
             <div class="stage" role="list"
                 ondragover={(ev) => { ev.preventDefault(); highlightedStage=stage._id }}
-                ondrop={(e: DragEvent) => moveContentItem(e.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
+                ondrop={(ev: DragEvent) => moveContentItem(ev.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
                 {#if highlightedStage == stage._id}
                 <div class="stage-overlay"></div>
                 {/if}

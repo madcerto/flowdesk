@@ -5,7 +5,8 @@ import PlusIcon from "$lib/images/plus-lg.svelte";
 
 const { data } = $props();
 
-let highlightedStage = $state(null);
+let dragging = $state(false);
+let highlightedStage = $derived(dragging ? "" : null);
 let archive = $state(data.archive);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
@@ -60,7 +61,6 @@ async function moveContentItem(itemId: string, deskId: string, stageId: string) 
         archive._items[itemIdx].task.stage = stageId
     }
 }
-function endDrag() { highlightedStage = null; }
 </script>
 
 <style>
@@ -122,8 +122,8 @@ h5 {
         <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
             <div class="stage" role="list"
-                ondragover={(e) => { e.preventDefault(); highlightedStage=stage._id }}
-                ondrop={(ev: DragEvent) => moveContentItem(ev.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
+                ondragover={(ev) => { ev.preventDefault(); highlightedStage=stage._id }}
+                ondrop={(e: DragEvent) => moveContentItem(e.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
                 {#if highlightedStage == stage._id}
                 <div class="stage-overlay"></div>
                 {/if}
@@ -132,7 +132,7 @@ h5 {
                     <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
                 </div>
                 {#each stageItems.get(stage._id) || [] as item}
-                    <ContentItem {item} {deleteContentItem} {endDrag} />
+                    <ContentItem {item} {deleteContentItem} bind:dragging={dragging} />
                 {:else}
                     <p class="empty">No items...</p>
                 {/each}

@@ -19,10 +19,33 @@ $effect(() => {
     justify-content: center;
     align-items: center;
 }
+dialog {
+    background: transparent;
+}
+form {
+    background: var(--neutral-primary-1);
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    * {
+        margin: 0.5rem 0 ;
+        text-align: center;
+    }
+}
 </style>
 
 <div id="publish-container" style:display={publishing ? undefined : "none"}>
     <dialog bind:this={dialog} onclose={() => publishing = undefined} closedBy="any">
-        PUBLISHING
+        <form>
+            <h3>PUBLISH</h3>
+            <button id="close-publishing" onclick={() => dialog.close()}>close</button>
+            <label for="subscribers">Target Subscribers:</label>
+            <select id="subscribers">
+                <option>Wordpress</option>
+            </select>
+            <input type="submit" value="Publish" />
+        </form>
     </dialog>
 </div>

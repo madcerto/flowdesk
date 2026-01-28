@@ -2,12 +2,14 @@
 import "$lib/styles/app.css";
 import PlusIcon from "$lib/images/plus-lg.svelte";
 import ContentItem from "./ContentItem.svelte";
+import PublishDialog from "./PublishDialog.svelte";
 
 const { data } = $props();
 
 let dragging = $state(false);
 let highlightedStage = $derived(dragging ? "" : null);
 let publishHovered = $state(false);
+let publishing: string | undefined = $state(undefined);
 let archive = $state(data.archive);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
@@ -152,6 +154,7 @@ h5 {
         <div class="publish" role="dialog" tabindex="0"
             style:background={publishHovered ? "var(--neutral-primary-3)" : "var(--neutral-primary-1)"}
             ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
-            ondrop={() => publishHovered = false}>PUBLISH</div>
+            ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>PUBLISH</div>
     {/if}
+    <PublishDialog bind:publishing={publishing} />
 </main>

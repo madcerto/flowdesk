@@ -5,7 +5,7 @@ import { getSessionToken, redirectToLogin, AuthenticationError, fetchJsonAuthent
 dotenv.config();
 const SD_API_URL = process.env.VITE_SD_API_URL;
 
-export async function load({ params, cookies, url }: { params: { articleId: string }, cookies: Cookies, url: URL }) {
+export async function load({ cookies, url }: { params: { articleId: string }, cookies: Cookies, url: URL }) {
     try {
         let session_token = getSessionToken(cookies);
 

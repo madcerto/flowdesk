@@ -1,4 +1,6 @@
 <script lang="ts">
+import { enhance } from "$app/forms";
+
 let { publishing = $bindable(), subscribers } = $props();
 
 let dialog: HTMLDialogElement;
@@ -38,11 +40,18 @@ form {
 
 <div id="publish-container" style:display={publishing ? undefined : "none"}>
     <dialog bind:this={dialog} onclose={() => publishing = undefined} closedBy="any">
-        <form>
+        <form method="post" use:enhance={({ formData }) => {
+            formData.append("contentId", publishing);
+
+            return async ({ update }) => {
+                update({ reset: false });
+                dialog.close();
+            };
+        }}>
             <h3>PUBLISH</h3>
             <button id="close-publishing" onclick={() => dialog.close()}>close</button>
             <label for="subscribers">Target Subscribers:</label>
-            <select id="subscribers">
+            <select name="subscribers">
             {#each subscribers as subscriber}
                 <option value={subscriber._id}>{subscriber.name}</option>
             {/each}

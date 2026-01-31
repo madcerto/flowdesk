@@ -1,5 +1,7 @@
 <script lang="ts">
 import { enhance } from "$app/forms";
+import { MultiSelect } from "flowbite-svelte";
+import "$lib/styles/multi-select.css";
 import XIcon from "$lib/images/x.svelte";
 
 let { publishing = $bindable(), subscribers, item } = $props();
@@ -39,6 +41,10 @@ form {
     h3 {
         margin: 0.75rem 1rem 2rem 0;
     }
+    label {
+        color: var(--neutral-secondary-3);
+        font-size: 1rem;
+    }
 }
 #close-publishing {
     position: absolute;
@@ -60,7 +66,7 @@ form {
     background: #00000022;
 }
 #dialog-actions {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     display: flex;
     flex-direction: row;
     justify-content: end;
@@ -83,12 +89,10 @@ form {
         }}>
             <button id="close-publishing" type="button" onclick={() => dialog.close()}><XIcon /></button>
             <h3>Publish '{item.headline}'?</h3>
-            <label for="subscribers">Target Subscribers:</label>
-            <select name="subscribers">
-            {#each subscribers as subscriber}
-                <option value={subscriber._id}>{subscriber.name}</option>
-            {/each}
-            </select>
+            <MultiSelect
+                name="subscribers" class="multi-select" placeholder="Please select a target subscriber..."
+                items={subscribers.map((s: any) => ({name: s.name, value: s._id}))} value={[]} />
+            <label for="subscribers">TARGETS</label>
             <div id="dialog-actions">
                 <button type="button" onclick={() => dialog.close()}>CANCEL</button>
                 <button type="submit">PUBLISH</button>

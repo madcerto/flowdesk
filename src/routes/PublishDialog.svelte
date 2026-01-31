@@ -90,6 +90,7 @@ form {
             {/each}
             </select>
             <div id="dialog-actions">
+                <button type="button" onclick={() => dialog.close()}>CANCEL</button>
                 <button type="submit">PUBLISH</button>
             </div>
         </form>

@@ -34,10 +34,10 @@ form {
     display: flex;
     flex-direction: column;
     * {
-        margin: 0.5rem 0 ;
+        margin: 0.25rem 0;
     }
     h3 {
-        margin: 0.75rem 1rem 0.25rem 0;
+        margin: 0.75rem 1rem 2rem 0;
     }
 }
 #close-publishing {
@@ -59,6 +59,16 @@ form {
     cursor: pointer;
     background: #00000022;
 }
+#dialog-actions {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    button {
+        font-size: 1rem;
+        padding: 0.25rem 0.75rem;
+    }
+}
 </style>
 
 <div id="publish-container" style:display={publishing ? undefined : "none"}>
@@ -79,7 +89,9 @@ form {
                 <option value={subscriber._id}>{subscriber.name}</option>
             {/each}
             </select>
-            <input type="submit" value="Publish" />
+            <div id="dialog-actions">
+                <button type="submit">PUBLISH</button>
+            </div>
         </form>
     </dialog>
 </div>

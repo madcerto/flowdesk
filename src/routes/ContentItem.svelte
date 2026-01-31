@@ -1,6 +1,6 @@
 <script lang="ts">
 import BinIcon from "$lib/images/trash-fill.svelte";
-const { item, deleteContentItem, endDrag } = $props();
+let { item, deleteContentItem, dragging=$bindable() } = $props();
 
 async function deleteItem(_e: Event) {
     let deleteData = await fetch(`${import.meta.env.VITE_SD_API_URL}/archive/spike/${item._id}`, {
@@ -98,8 +98,8 @@ async function deleteItem(_e: Event) {
 </style>
 
 <div class="content-item" draggable="true" role="listitem"
-    ondragend={endDrag}
-    ondragstart={(ev: DragEvent) => ev.dataTransfer?.setData("text", item._id)}>
+    ondragend={() => dragging = false}
+    ondragstart={(ev: DragEvent) => { dragging = true; ev.dataTransfer?.setData("text", item._id); }}>
     <div>
         <p class="headline" title="Headline">{item.headline}</p>
         {#if item.authors || item.byline}<p>by</p>{/if}

@@ -1,19 +1,21 @@
 <script lang="ts">
 import "$lib/styles/app.css";
-import ContentItem from "./ContentItem.svelte";
 import PlusIcon from "$lib/images/plus-lg.svelte";
+import ContentItem from "./ContentItem.svelte";
+import PublishDialog from "./PublishDialog.svelte";
 
 const { data } = $props();
 
-let highlightedStage = $state(null);
+let dragging = $state(false);
+let highlightedStage = $derived(dragging ? "" : null);
+let publishHovered = $state(false);
+let publishing: string | undefined = $state(undefined);
 let archive = $state(data.archive);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
 const stageItems: Map<string, any[]> = $derived.by(() => {
     return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id && item.state != "spiked")]));
 });
-
-$inspect(stageItems);
 
 const createContentItem = (desk: any, stageId: string) => async () => {
     let body = `{
@@ -60,7 +62,6 @@ async function moveContentItem(itemId: string, deskId: string, stageId: string) 
         archive._items[itemIdx].task.stage = stageId
     }
 }
-function endDrag() { highlightedStage = null; }
 </script>
 
 <style>
@@ -115,6 +116,16 @@ h5 {
     margin: 1rem 2rem;
     font-style: italic;
 }
+.publish {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 2rem;
+    padding: 2rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 16px 8px rgba(0, 0, 0, 0.2);
+}
 </style>
 
 <main>
@@ -122,7 +133,7 @@ h5 {
         <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
             <div class="stage" role="list"
-                ondragover={(e) => { e.preventDefault(); highlightedStage=stage._id }}
+                ondragover={(ev) => { ev.preventDefault(); highlightedStage=stage._id }}
                 ondrop={(ev: DragEvent) => moveContentItem(ev.dataTransfer?.getData("text") || "", desk._id, stage._id)}>
                 {#if highlightedStage == stage._id}
                 <div class="stage-overlay"></div>
@@ -132,11 +143,18 @@ h5 {
                     <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
                 </div>
                 {#each stageItems.get(stage._id) || [] as item}
-                    <ContentItem {item} {deleteContentItem} {endDrag} />
+                    <ContentItem {item} {deleteContentItem} bind:dragging={dragging} />
                 {:else}
                     <p class="empty">No items...</p>
                 {/each}
             </div>
         {/each}
     {/each}
+    {#if dragging}
+        <div class="publish" role="dialog" tabindex="0"
+            style:background={publishHovered ? "var(--neutral-primary-3)" : "var(--neutral-primary-1)"}
+            ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
+            ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>PUBLISH</div>
+    {/if}
+    <PublishDialog bind:publishing={publishing} subscribers={data.subscribers._items} />
 </main>

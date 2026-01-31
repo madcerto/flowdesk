@@ -30,7 +30,7 @@ dialog {
 form {
     background: var(--neutral-primary-1);
     border-radius: 10px;
-    border: 1px solid black;
+    border: 1px solid var(--neutral-secondary-1);
     padding: 1rem 2rem;
     position: relative;
     display: flex;
@@ -73,6 +73,15 @@ form {
     button {
         font-size: 1rem;
         padding: 0.25rem 0.75rem;
+        margin: 0 0.5rem;
+        border-radius: 5px;
+    }
+    button[type="submit"] {
+        background: var(--primary-800);
+        color: white;
+    }
+    button[type="submit"]:hover {
+        background: var(--accent-blue);
     }
 }
 </style>
@@ -89,10 +98,10 @@ form {
         }}>
             <button id="close-publishing" type="button" onclick={() => dialog.close()}><XIcon /></button>
             <h3>Publish '{item.headline}'?</h3>
-            <MultiSelect
-                name="subscribers" class="multi-select" placeholder="Please select a target subscriber..."
-                items={subscribers.map((s: any) => ({name: s.name, value: s._id}))} value={[]} />
             <label for="subscribers">TARGETS</label>
+            <MultiSelect
+                name="subscribers" class="multi-select" placeholder="Select target subscribers..."
+                items={subscribers.map((s: any) => ({name: s.name, value: s._id}))} value={[]} />
             <div id="dialog-actions">
                 <button type="button" onclick={() => dialog.close()}>CANCEL</button>
                 <button type="submit">PUBLISH</button>

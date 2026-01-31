@@ -6,6 +6,7 @@ import XIcon from "$lib/images/x.svelte";
 
 let { publishing = $bindable(), subscribers, item } = $props();
 
+let targets = $state([]);
 let dialog: HTMLDialogElement;
 
 $effect(() => {
@@ -83,6 +84,10 @@ form {
     button[type="submit"]:hover {
         background: var(--accent-blue);
     }
+    button[disabled], button[disabled]:hover {
+        background: var(--neutral-primary-3);
+        cursor: not-allowed;
+    }
 }
 </style>
 
@@ -101,10 +106,10 @@ form {
             <label for="subscribers">TARGETS</label>
             <MultiSelect
                 name="subscribers" class="multi-select" placeholder="Select target subscribers..."
-                items={subscribers.map((s: any) => ({name: s.name, value: s._id}))} value={[]} />
+                items={subscribers.map((s: any) => ({name: s.name, value: s._id}))} bind:value={targets} />
             <div id="dialog-actions">
                 <button type="button" onclick={() => dialog.close()}>CANCEL</button>
-                <button type="submit">PUBLISH</button>
+                <button type="submit" disabled={targets.length == 0}>PUBLISH</button>
             </div>
         </form>
     </dialog>

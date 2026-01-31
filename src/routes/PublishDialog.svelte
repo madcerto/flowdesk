@@ -2,7 +2,7 @@
 import { enhance } from "$app/forms";
 import XIcon from "$lib/images/x.svelte";
 
-let { publishing = $bindable(), subscribers } = $props();
+let { publishing = $bindable(), subscribers, item } = $props();
 
 let dialog: HTMLDialogElement;
 
@@ -35,7 +35,9 @@ form {
     flex-direction: column;
     * {
         margin: 0.5rem 0 ;
-        text-align: center;
+    }
+    h3 {
+        margin: 0.75rem 1rem 0.25rem 0;
     }
 }
 #close-publishing {
@@ -69,8 +71,8 @@ form {
                 dialog.close();
             };
         }}>
-            <h3>PUBLISH</h3>
             <button id="close-publishing" type="button" onclick={() => dialog.close()}><XIcon /></button>
+            <h3>Publish '{item.headline}'?</h3>
             <label for="subscribers">Target Subscribers:</label>
             <select name="subscribers">
             {#each subscribers as subscriber}

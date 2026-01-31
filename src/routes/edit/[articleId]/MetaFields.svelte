@@ -2,7 +2,7 @@
     import { MultiSelect } from "flowbite-svelte";
     import OpenFieldsIcon from "$lib/images/arrow-bar-right.svg";
     import CloseFieldsIcon from "$lib/images/arrow-bar-left.svg";
-    import "./multi-select.css";
+    import "$lib/styles/multi-select.css";
     import { fieldNames, fieldVocabs } from "./meta-field-relationships";
 
     const { metaFields, schema, vocabs, item }: { metaFields: Map<string, any>, schema: Map<string, any>, vocabs: any, item: any } = $props();
@@ -72,6 +72,9 @@
         width: 100%;
         margin: 0.75rem 0;
     }
+    :global(.multi-select.full-width) { width: 24rem; }
+    :global(.multi-select.half-width) { width: 11.625rem; }
+    :global(.multi-select.quarter-width) { width: 5.4375rem; }
 </style>
 
 <div id="meta-fields-container">

@@ -100,7 +100,7 @@ form {
                 update({ reset: false });
                 dialog.close();
             };
-        }}>
+        }} onclose={(ev) => ev.stopPropagation()}>
             <button id="close-publishing" type="button" onclick={() => dialog.close()}><XIcon /></button>
             <h3>Publish '{item.headline}'?</h3>
             <label for="subscribers">TARGETS</label>

@@ -7,7 +7,7 @@ import PublishDialog from "./PublishDialog.svelte";
 
 const { data } = $props();
 
-let dragging = $state(false);
+let dragging: string | undefined = $state(undefined);
 let highlightedStage = $derived(dragging ? "" : null);
 let publishHovered = $state(false);
 let publishing: string | undefined = $state(undefined);
@@ -17,6 +17,10 @@ const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any)
 const stageItems: Map<string, any[]> = $derived.by(() => {
     return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id && item.state != "spiked")]));
 });
+const getItemPublishable = (itemId: string) => {
+    let deskId = archive._items.find((i: any) => i._id == itemId).task.desk;
+    return data.desks._items.find((d: any) => d._id == deskId).desk_type == "production";
+}
 
 const createContentItem = (desk: any, stageId: string) => async () => {
     let body = `{
@@ -169,7 +173,7 @@ h5 {
             </div>
         {/each}
     {/each}
-    {#if dragging}
+    {#if dragging && getItemPublishable(dragging)}
         <div class="publish-container">
             <div class="publish" role="dialog" tabindex="0"
                 style:background={publishHovered ? "#00000022" : "transparent"}

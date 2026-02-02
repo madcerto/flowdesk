@@ -15,7 +15,7 @@ $effect(() => {
 </script>
 
 <style>
-#publish-container {
+#publish-dialog-container {
     position: fixed;
     top: 0; left: 0;
     width: 100%;
@@ -91,7 +91,7 @@ form {
 }
 </style>
 
-<div id="publish-container" style:display={publishing ? undefined : "none"}>
+<div id="publish-dialog-container" style:display={publishing ? undefined : "none"}>
     <dialog bind:this={dialog} onclose={() => publishing = undefined} closedBy="any">
         <form method="post" use:enhance={({ formData }) => {
             formData.append("contentId", publishing);

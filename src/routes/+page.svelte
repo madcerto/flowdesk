@@ -1,6 +1,7 @@
 <script lang="ts">
 import "$lib/styles/app.css";
 import PlusIcon from "$lib/images/plus-lg.svelte";
+import CloudUploadIcon from "$lib/images/cloud-upload.svelte";
 import ContentItem from "./ContentItem.svelte";
 import PublishDialog from "./PublishDialog.svelte";
 
@@ -71,8 +72,10 @@ main {
 }
 h3 {
     margin: 0 1rem;
+    margin-top: 1rem;
     padding-bottom: 0.5rem;
     padding-top: 1rem;
+    padding-left: 1rem;
     border-bottom: 1px solid var(--neutral-primary-3);
 }
 .stage {
@@ -81,6 +84,7 @@ h3 {
     position: relative;
     margin: 0.25rem;
     margin-bottom: 0;
+    padding: 0 1rem;
 }
 .stage-overlay {
     background-color: #00000011;
@@ -116,15 +120,30 @@ h5 {
     margin: 1rem 2rem;
     font-style: italic;
 }
-.publish {
-    position: fixed;
+.publish-container {
+    position:fixed;
     bottom: 0;
     right: 0;
-    margin: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(90deg,rgba(0, 0, 0, 0) 0%, #B4DFFCaa 100%);
+}
+.publish {
+    margin: 80% 0;
     padding: 2rem;
     border: 1px solid black;
-    border-radius: 5px;
-    box-shadow: 0 0 16px 8px rgba(0, 0, 0, 0.2);
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    :global(svg) {
+        width: 3rem;
+        height: 3rem;
+        pointer-events: none;
+    }
 }
 </style>
 
@@ -151,10 +170,14 @@ h5 {
         {/each}
     {/each}
     {#if dragging}
-        <div class="publish" role="dialog" tabindex="0"
-            style:background={publishHovered ? "var(--neutral-primary-3)" : "var(--neutral-primary-1)"}
-            ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
-            ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>PUBLISH</div>
+        <div class="publish-container">
+            <div class="publish" role="dialog" tabindex="0"
+                style:background={publishHovered ? "#00000022" : "transparent"}
+                ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
+                ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>
+                <CloudUploadIcon />
+            </div>
+        </div>
     {/if}
     {#if publishing}
         <PublishDialog bind:publishing={publishing} subscribers={data.subscribers._items} item={archive._items.find((i: any) => i._id == publishing)} />

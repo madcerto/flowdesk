@@ -1,17 +1,43 @@
 <script lang="ts">
+import { ToastContainer, Toast } from "flowbite-svelte";
+import { fly } from "svelte/transition";
+import { untrack } from "svelte";
 import "$lib/styles/app.css";
+import "./toast.css";
 import PlusIcon from "$lib/images/plus-lg.svelte";
 import CloudUploadIcon from "$lib/images/cloud-upload.svelte";
+import type { NotificationItem } from "./notifications"
 import ContentItem from "./ContentItem.svelte";
 import PublishDialog from "./PublishDialog.svelte";
 
-const { data } = $props();
+const { data, form } = $props();
 
 let dragging: string | undefined = $state(undefined);
 let highlightedStage = $derived(dragging ? "" : null);
 let publishHovered = $state(false);
 let publishing: string | undefined = $state(undefined);
+let notifications: NotificationItem[] = $state([]);
 let archive = $state(data.archive);
+
+let nextNotifId = 1;
+const addNotification = (message: string) => {
+    let newNotif: NotificationItem = {
+        id: nextNotifId,
+        message,
+        color: "red",
+        visible: true
+    };
+    newNotif.timeoutId = setTimeout(() => {
+        const notif = notifications.find((n) => n.id == newNotif.id);
+        if (notif) {
+            if (notif.timeoutId) clearTimeout(notif.timeoutId);
+            notif.visible = false;
+            setTimeout(() => notifications = notifications.filter((n) => n.id !== notif?.id), 300);
+        }
+    }, 8000);
+    notifications.push(newNotif);
+    nextNotifId += 1;
+}
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
 const stageItems: Map<string, any[]> = $derived.by(() => {
@@ -46,7 +72,7 @@ const createContentItem = (desk: any, stageId: string) => async () => {
 }
 
 function deleteContentItem(itemId: string) {
-    archive._items = archive._items.filter((item: any) => item._id != itemId);
+    archive._items = archive._items.filter((item: any) => item._id !== itemId);
 }
 
 async function moveContentItem(itemId: string, deskId: string, stageId: string) {
@@ -67,6 +93,15 @@ async function moveContentItem(itemId: string, deskId: string, stageId: string) 
         archive._items[itemIdx].task.stage = stageId
     }
 }
+
+$effect(() => { if (form) { // Whenever form changes, if it is defined:
+    if (form._status == "ERR")
+        untrack(() => addNotification(`PUBLISH ERROR: ${form._issues["validator exception"]}`));
+    else if (form._status == "OK") untrack(() => {
+        addNotification(`Successfully published "${form.headline}"`);
+        archive._items = archive._items.filter((item: any) => item._id !== form._id);
+    })
+}})
 </script>
 
 <style>
@@ -152,6 +187,16 @@ h5 {
 </style>
 
 <main>
+    <ToastContainer class="toast-container" position="top-right">
+    {#each notifications as notification (notification.id)}
+        <Toast
+            class={`toast ${(notification.color == "red") ? "toast-red" : "toast-green"}`}
+            transition={fly} params={{ x: 200, duration: 800 }}
+            bind:toastStatus={notification.visible}>
+                {notification.message}
+        </Toast>
+    {/each}
+    </ToastContainer>
     {#each data.desks._items as desk}
         <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}

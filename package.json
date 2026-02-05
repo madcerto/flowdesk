@@ -34,7 +34,7 @@
     "@types/node": "^22",
     "drizzle-kit": "^0.30.2",
     "flowbite": "^3.1.2",
-    "flowbite-svelte": "^1.17.4",
+    "flowbite-svelte": "^1.31.0",
     "storybook": "^9.1.2",
     "svelte": "^5.25.0",
     "svelte-check": "^4.0.0",

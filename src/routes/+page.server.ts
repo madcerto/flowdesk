@@ -35,13 +35,15 @@ export const actions = {
             let content = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/archive/${contentId}`);
             let etag = content._etag;
 
-            await fetchJsonAuthenticated(session_token, `${SD_API_URL}/archive/publish/${contentId}`, {
+            let res = await fetchJsonAuthenticated(session_token, `${SD_API_URL}/archive/publish/${contentId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json", "If-Match": etag },
                 body: JSON.stringify({target_subscribers: [...subscribers.map((subscriberId) => {return {_id: subscriberId}})]})
             });
-        } catch (e) { // If authentication fails, redirect to login page
+            if (res._status == "OK") return { _status: "OK", _id: res._id, headline: res.headline };
+        } catch (e: any) { // If authentication fails, redirect to login page
             if (e instanceof AuthenticationError) redirectToLogin(url.origin+url.pathname);
+            else if (JSON.parse(e.message)._issues["validator exception"]) return JSON.parse(e.message);
             else throw e; // TODO: handle potential errors here
         }
     }

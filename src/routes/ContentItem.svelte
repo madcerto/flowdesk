@@ -98,8 +98,8 @@ async function deleteItem(_e: Event) {
 </style>
 
 <div class="content-item" draggable="true" role="listitem"
-    ondragend={() => dragging = false}
-    ondragstart={(ev: DragEvent) => { dragging = true; ev.dataTransfer?.setData("text", item._id); }}>
+    ondragend={() => dragging = undefined}
+    ondragstart={(ev: DragEvent) => { dragging = item._id; ev.dataTransfer?.setData("text", item._id); }}>
     <div>
         <p class="headline" title="Headline">{item.headline}</p>
         {#if item.authors || item.byline}<p>by</p>{/if}

@@ -1,21 +1,36 @@
 <script lang="ts">
+import { ToastContainer, Toast } from "flowbite-svelte";
+import { fly } from "svelte/transition";
+import { untrack } from "svelte";
 import "$lib/styles/app.css";
+import "./toast.css";
 import PlusIcon from "$lib/images/plus-lg.svelte";
+import CloudUploadIcon from "$lib/images/cloud-upload.svelte";
+import type { NotificationItem } from "./notifications";
+import { createNotification } from "./notifications";
 import ContentItem from "./ContentItem.svelte";
 import PublishDialog from "./PublishDialog.svelte";
 
-const { data } = $props();
+const { data, form } = $props();
 
-let dragging = $state(false);
+let dragging: string | undefined = $state(undefined);
 let highlightedStage = $derived(dragging ? "" : null);
 let publishHovered = $state(false);
 let publishing: string | undefined = $state(undefined);
+let notifications: NotificationItem[] = $state([]);
 let archive = $state(data.archive);
+
+let nextNotifId = 1;
+const addNotification = (message: string) => createNotification(message, notifications, nextNotifId);
 
 const getDeskStages = (deskId: string) => data.stages._items.filter((stage: any) => stage.desk == deskId);
 const stageItems: Map<string, any[]> = $derived.by(() => {
     return new Map(data.stages._items.map((stage: any) => [stage._id, archive._items.filter((item: any) => item.task.stage == stage._id && item.state != "spiked")]));
 });
+const getItemPublishable = (itemId: string) => {
+    let deskId = archive._items.find((i: any) => i._id == itemId).task.desk;
+    return data.desks._items.find((d: any) => d._id == deskId).desk_type == "production";
+}
 
 const createContentItem = (desk: any, stageId: string) => async () => {
     let body = `{
@@ -41,7 +56,7 @@ const createContentItem = (desk: any, stageId: string) => async () => {
 }
 
 function deleteContentItem(itemId: string) {
-    archive._items = archive._items.filter((item: any) => item._id != itemId);
+    archive._items = archive._items.filter((item: any) => item._id !== itemId);
 }
 
 async function moveContentItem(itemId: string, deskId: string, stageId: string) {
@@ -62,6 +77,15 @@ async function moveContentItem(itemId: string, deskId: string, stageId: string) 
         archive._items[itemIdx].task.stage = stageId
     }
 }
+
+$effect(() => { if (form) { // Whenever form changes, if it is defined:
+    if (form._status == "ERR")
+        untrack(() => addNotification(`PUBLISH ERROR: ${form._issues["validator exception"]}`));
+    else if (form._status == "OK") untrack(() => {
+        addNotification(`Successfully published "${form.headline}"`);
+        archive._items = archive._items.filter((item: any) => item._id !== form._id);
+    })
+}})
 </script>
 
 <style>
@@ -71,8 +95,10 @@ main {
 }
 h3 {
     margin: 0 1rem;
+    margin-top: 1rem;
     padding-bottom: 0.5rem;
     padding-top: 1rem;
+    padding-left: 1rem;
     border-bottom: 1px solid var(--neutral-primary-3);
 }
 .stage {
@@ -81,6 +107,7 @@ h3 {
     position: relative;
     margin: 0.25rem;
     margin-bottom: 0;
+    padding: 0 1rem;
 }
 .stage-overlay {
     background-color: #00000011;
@@ -116,19 +143,44 @@ h5 {
     margin: 1rem 2rem;
     font-style: italic;
 }
-.publish {
-    position: fixed;
+.publish-container {
+    position:fixed;
     bottom: 0;
     right: 0;
-    margin: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(90deg,rgba(0, 0, 0, 0) 0%, #B4DFFCaa 100%);
+}
+.publish {
+    margin: 80% 0;
     padding: 2rem;
     border: 1px solid black;
-    border-radius: 5px;
-    box-shadow: 0 0 16px 8px rgba(0, 0, 0, 0.2);
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    :global(svg) {
+        width: 3rem;
+        height: 3rem;
+        pointer-events: none;
+    }
 }
 </style>
 
 <main>
+    <ToastContainer class="toast-container" position="top-right">
+    {#each notifications as notification (notification.id)}
+        <Toast
+            class={`toast ${(notification.color == "red") ? "toast-red" : "toast-green"}`}
+            transition={fly} params={{ x: 200, duration: 800 }}
+            bind:toastStatus={notification.visible}>
+                {notification.message}
+        </Toast>
+    {/each}
+    </ToastContainer>
     {#each data.desks._items as desk}
         <h3>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
@@ -150,11 +202,17 @@ h5 {
             </div>
         {/each}
     {/each}
-    {#if dragging}
-        <div class="publish" role="dialog" tabindex="0"
-            style:background={publishHovered ? "var(--neutral-primary-3)" : "var(--neutral-primary-1)"}
-            ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
-            ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>PUBLISH</div>
+    {#if dragging && getItemPublishable(dragging)}
+        <div class="publish-container">
+            <div class="publish" role="dialog" tabindex="0"
+                style:background={publishHovered ? "#00000022" : "transparent"}
+                ondragenter={() => publishHovered = true} ondragleave={() => publishHovered = false} ondragover={(ev) => ev.preventDefault()}
+                ondrop={(ev: DragEvent) => { publishHovered = false; publishing = ev.dataTransfer?.getData("text"); }}>
+                <CloudUploadIcon />
+            </div>
+        </div>
     {/if}
-    <PublishDialog bind:publishing={publishing} subscribers={data.subscribers._items} />
+    {#if publishing}
+        <PublishDialog bind:publishing={publishing} subscribers={data.subscribers._items} item={archive._items.find((i: any) => i._id == publishing)} />
+    {/if}
 </main>

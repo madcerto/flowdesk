@@ -53,6 +53,9 @@ async function deleteItem(_e: Event) {
     padding: 0 0.75rem;
     font-size: 1.25rem;
     font-weight: bold;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .authors-list {
     padding: 0 0.75rem;
@@ -61,10 +64,14 @@ async function deleteItem(_e: Event) {
     gap: 0.5rem;
     align-items: center;
     font-size: 1rem;
+    min-width: 5rem;
 }
 .byline {
     font-style: italic;
     font-weight: bold;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .author {
     background: var(--neutral-primary-2);

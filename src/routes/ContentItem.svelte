@@ -118,8 +118,8 @@ async function deleteItem(_e: Event) {
             <p class="author">{author.sub_label}</p>
         {/each}
         </span>
-        <a class="edit-btn" href={`/edit/${item._id}`}>Edit</a>
-        <button class="delete-btn" onclick={deleteItem}><BinIcon /></button>
+        <a class="edit-btn" style:background={dragging ? "var(--neutral-primary-3)" : undefined} href={`/edit/${item._id}`}>Edit</a>
+        <button class="delete-btn" style:background={dragging ? "var(--neutral-primary-3)" : undefined} onclick={deleteItem}><BinIcon /></button>
         <!-- TODO: vertically center the bin icon inside the button -->
     </div>
     <div class="categories">

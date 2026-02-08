@@ -99,7 +99,9 @@ h3 {
     padding-bottom: 0.5rem;
     padding-top: 1rem;
     padding-left: 1rem;
-    border-bottom: 1px solid var(--neutral-primary-3);
+    border-bottom: 1px solid var(--primary-800);
+    border-radius: 15px 15px 0 0;
+    background: var(--accent-blue-light);
 }
 .stage {
     display: flex;
@@ -111,7 +113,7 @@ h3 {
 }
 .stage-overlay {
     background-color: #00000011;
-    width: 100%;
+    width: calc(100% - 2rem);
     height: 100%;
     position: absolute;
     border-radius: 7px;

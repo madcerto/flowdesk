@@ -103,6 +103,9 @@ h3 {
     border-radius: 15px 15px 0 0;
     background: var(--accent-blue-light);
 }
+.production-desk-heading {
+    background: var(--accent-orange);
+}
 .stage {
     display: flex;
     flex-direction: column;
@@ -183,8 +186,8 @@ h5 {
         </Toast>
     {/each}
     </ToastContainer>
-    {#each data.desks._items as desk}
-        <h3>{desk.name.toUpperCase()}</h3>
+    {#each data.desks._items.sort((a: any) => a.desk_type == "production") as desk}
+        <h3 class={desk.desk_type == "production" ? "production-desk-heading" : ""}>{desk.name.toUpperCase()}</h3>
         {#each getDeskStages(desk._id) as stage}
             <div class="stage" role="list"
                 ondragover={(ev) => { ev.preventDefault(); highlightedStage=stage._id }}

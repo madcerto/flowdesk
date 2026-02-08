@@ -100,6 +100,7 @@ async function deleteItem(_e: Event) {
     :global(svg) {
         fill: white;
         height: 100%;
+        vertical-align: bottom;
     }
 }
 </style>

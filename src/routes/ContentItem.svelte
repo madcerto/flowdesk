@@ -1,4 +1,5 @@
 <script lang="ts">
+import { fly } from "svelte/transition";
 import BinIcon from "$lib/images/trash-fill.svelte";
 let { item, deleteContentItem, dragging=$bindable() } = $props();
 
@@ -105,7 +106,7 @@ async function deleteItem(_e: Event) {
 }
 </style>
 
-<div class="content-item" draggable="true" role="listitem"
+<div class="content-item" draggable="true" role="listitem" transition:fly={{ x: 200, duration: 800 }}
     ondragend={() => dragging = undefined}
     ondragstart={(ev: DragEvent) => { dragging = item._id; ev.dataTransfer?.setData("text", item._id); }}>
     <div>

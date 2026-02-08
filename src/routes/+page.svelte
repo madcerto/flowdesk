@@ -194,7 +194,7 @@ h5 {
                     <h5>{stage.name.toUpperCase()}</h5>
                     <button onclick={createContentItem(desk, stage._id)}><PlusIcon /></button>
                 </div>
-                {#each stageItems.get(stage._id) || [] as item}
+                {#each stageItems.get(stage._id) || [] as item (item._id)}
                     <ContentItem {item} {deleteContentItem} bind:dragging={dragging} />
                 {:else}
                     <p class="empty">No items...</p>

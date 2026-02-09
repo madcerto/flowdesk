@@ -96,9 +96,7 @@ main {
 h3 {
     margin: 0 1rem;
     margin-top: 1rem;
-    padding-bottom: 0.5rem;
-    padding-top: 1rem;
-    padding-left: 1rem;
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--primary-800);
     border-radius: 15px 15px 0 0;
     background: var(--accent-blue-light);
